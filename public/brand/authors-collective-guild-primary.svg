@@ -1,7 +1,7 @@
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
   <title>Authors Collective Grid Monogram</title>
   <circle cx="256" cy="256" r="194" stroke="#000000" stroke-width="16"/>
-  <g transform="translate(-19 -14)">
+  <g transform="translate(256 256) scale(.84) translate(-275 -270)">
   <path d="M142 146H218V222H142V146Z" fill="#000000"/>
   <path d="M238 146H276C297 146 314 163 314 184C314 205 297 222 276 222H238V146Z" fill="#000000"/>
   <circle cx="370" cy="184" r="38" fill="#F20505"/>
