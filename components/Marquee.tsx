@@ -1,13 +1,13 @@
 "use client";
 
 const SERVICES = [
-  "SEO and Market Research",
+  "Technical Content Writing",
   "Developer Advocacy",
-  "Product Demo",
-  "Branding and Design",
+  "App Development",
+  "Brand Consulting",
+  "Graphic Design",
   "Blog, Tutorial, and Guide Writing",
-  "Short-form and Long-form Video Production",
-  "Content Marketing",
+  "Product Marketing",
 ];
 
 export default function Marquee() {

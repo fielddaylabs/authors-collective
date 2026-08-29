@@ -5,141 +5,23 @@ import Hero from "@/components/Hero";
 import Caro from "@/components/Caro";
 import Link from "next/link";
 
+const portfolio = [
+  { name: "Load Calc Guru", href: "https://loadcalcguru.com", summary: "Manual J load-calculation software for HVAC contractors, with professional permit-ready reports.", tone: "bg-[#dbeadf]" },
+  { name: "MoveRoom", href: "https://moveroom.app", summary: "Software for independent fitness and wellness businesses to publish, book, and teach live classes.", tone: "bg-[#e7ddf0]" },
+  { name: "Tally, Ho!", href: "https://tallyhoplans.com", summary: "A group-trip planning product for shared decisions, commitments, and records. Currently waitlist-only.", tone: "bg-[#f5dce0]" },
+];
+
 export default function Home() {
-  return (
-    <main className="min-h-screen bg-background">
-      <Navbar />
-      <Hero prefix="The" title="Authors" typewriterText="Collective" subheader="A team you already know making content you already love" />
+  return <main className="min-h-screen bg-background"><Navbar /><Hero prefix="The" title="Authors" typewriterText="Collective" subheader="Technical content, thoughtful software, and enduring brands" /><Marquee />
+    <section className="max-w-[1400px] mx-auto px-6 lg:px-24 py-20 lg:py-32 flex flex-col lg:flex-row items-center gap-12 lg:gap-24"><div className="flex-1 flex flex-col gap-4 text-left"><h2 className="font-josefin font-semibold text-5xl lg:text-7xl text-primary uppercase leading-tight">What we do</h2><p className="font-girassol text-3xl lg:text-5xl text-black uppercase leading-tight">Careful work, from the words to the product</p></div><div className="hidden lg:block w-1 h-56 bg-primary" /><div className="flex-1"><p className="font-josefin text-lg lg:text-xl text-black text-justify leading-relaxed tracking-wide">Authors Collective pairs technical content writing with app development, brand consulting, graphic design, and other specialist work. We help teams explain complex ideas clearly, build useful products, and make them feel considered from the first impression to the final detail.</p></div></section>
+    <Caro />
+    <section id="portfolio" className="bg-[#dfddd2] max-w-full"><div className="max-w-[1400px] mx-auto px-6 lg:px-24 py-20 lg:py-32"><div className="flex flex-col lg:flex-row gap-10 lg:gap-24 items-end mb-12"><div className="flex-1"><h2 className="font-josefin font-semibold text-5xl lg:text-7xl text-primary uppercase leading-tight">Our products</h2><p className="font-girassol text-3xl lg:text-5xl text-black uppercase leading-tight mt-4">Small apps, thoughtfully built</p></div><p className="flex-1 font-josefin text-lg lg:text-xl text-black leading-relaxed">Authors Collective supports independent software products with their own audiences, identities, and purpose.</p></div><div className="grid grid-cols-1 md:grid-cols-3 gap-5">{portfolio.map((product) => <a key={product.name} href={product.href} target="_blank" rel="noreferrer" className={`${product.tone} min-h-72 rounded-3xl border-2 border-black p-7 lg:p-8 flex flex-col transition-transform hover:-translate-y-2`}><span className="font-josefin text-xs uppercase tracking-widest text-primary">Authors Collective product</span><h3 className="font-girassol text-3xl lg:text-4xl uppercase mt-5 leading-tight">{product.name}</h3><p className="font-josefin text-base leading-relaxed mt-5">{product.summary}</p><span className="font-josefin font-bold text-sm uppercase tracking-wider border-b-2 border-black w-fit mt-auto pt-6">Visit product site</span></a>)}</div></div></section>
+    <section className="max-w-[1400px] mx-auto px-6 lg:px-24 py-20 lg:py-32 flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-24"><div className="flex-1 flex flex-col items-start gap-8"><p className="font-josefin text-lg lg:text-xl text-black text-justify leading-relaxed tracking-wide">We are a collective of practitioners who believe the best work earns attention through clarity and craft. That can mean a high-signal technical guide, a well-run product experience, a brand system, or the graphic details that hold it all together.</p><Link href="/team" className="border-2 border-black px-8 py-3 rounded-xl font-girassol text-2xl uppercase hover:bg-black hover:text-white transition-all">About the founder</Link></div><div className="hidden lg:block w-1 h-56 bg-primary" /><div className="flex-1 flex flex-col gap-4 text-left"><h2 className="font-josefin font-semibold text-5xl lg:text-7xl text-primary uppercase leading-tight">Who are we</h2><p className="font-girassol text-3xl lg:text-5xl text-black uppercase leading-tight">A collective of thoughtful specialists</p></div></section>
+    <Testimonials /><Footer />
+  </main>;
+}
 
-      {/* Marquee */}
-      <Marquee />
-
-      {/* Content Section 3 (What We Do) */}
-      <section className="max-w-[1400px] mx-auto px-6 lg:px-24 py-20 lg:py-32 flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
-        <div className="flex-1 flex flex-col gap-4 text-left">
-          <h2 className="font-josefin font-semibold text-5xl lg:text-7xl text-primary uppercase leading-tight">
-            What we do
-          </h2>
-          <p className="font-girassol text-3xl lg:text-5xl text-black uppercase leading-tight">
-            High-quality content by seasoned professionals
-          </p>
-        </div>
-
-        {/* Red Separator */}
-        <div className="hidden lg:block w-1 h-56 bg-primary" />
-
-        <div className="flex-1">
-          <p className="font-josefin text-lg lg:text-xl text-black text-justify leading-relaxed tracking-wide">
-            With the Authors Collective, you can be as hands-on or hands-off as you like. It's technical writing, video-editing, natural-language-translation, product marketing, community auditing, and course-teaching, just without all the babysitting and handholding. We'll handle as much as you're comfortable with, from dreaming up the best ideas to sending the final piece off into the world. Whatever you need, we'll blend modern technology and old-school work ethic to make it happen.
-          </p>
-        </div>
-      </section>
-
-      {/* Caro Process Carousel */}
-      <Caro />
-
-      {/* Content Section 4 (Who Are We) */}
-      <section className="bg-[#dfddd2] max-w-full">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-24 py-20 lg:py-32 flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-24">
-          <div className="flex-1 flex flex-col items-start gap-8">
-            <p className="font-josefin text-lg lg:text-xl text-black text-justify leading-relaxed tracking-wide">
-              We're a collective of authors with day jobs at Slack, Adobe, GitHub, AWS, Netflix, and others. Tailored teams producing high-signal content for developer tools, hired per-project. No long-term agency bloat.
-            </p>
-            <Link
-              href="/team"
-              className="border-2 border-black px-8 py-3 rounded-xl font-girassol text-2xl uppercase hover:bg-black hover:text-white transition-all"
-            >
-              About the founder
-            </Link>
-          </div>
-
-          {/* Red Separator */}
-          <div className="hidden lg:block w-1 h-56 bg-primary" />
-
-          <div className="flex-1 flex flex-col gap-4 text-left">
-            <h2 className="font-josefin font-semibold text-5xl lg:text-7xl text-primary uppercase leading-tight">
-              Who are we
-            </h2>
-            <p className="font-girassol text-3xl lg:text-5xl text-black uppercase leading-tight">
-              A loose collective of senior content experts
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Social Proof (Testimonials) */}
-      <section className="bg-background px-6 lg:px-24 py-20 lg:py-32">
-        <div className="max-w-[1400px] mx-auto flex flex-col items-center">
-          <h2 className="font-josefin font-bold text-2xl lg:text-3xl text-black uppercase tracking-widest text-center mb-16">
-            What some folks have had to say about us
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
-            {[
-              {
-                quote: "Actually one of the best genuine attempts at explaining Jamstack I've seen in years. Nicely done",
-                project: "TakeShape's review of the Jamstack identity crisis",
-                author: "Shawn Wang (swyx)",
-                company: "one of the world's foremost dev-focused content creators",
-                image: "https://www.swyx.io/swyx-ski.jpeg"
-              },
-              {
-                quote: "You're solving a good problem here - awesome!",
-                project: "our work with Algolia",
-                author: "Scott Mathson",
-                company: "creator of Plink, formerly in marketing at Algolia",
-                image: "https://scottmathson.com/assets/img/scott-mathson-photo-missoula-2023.JPG"
-              },
-              {
-                quote: "Thank you SO MUCH @jbaptista!! And kudos to you for taking on Hugo!",
-                project: "the Mattermost Contributor Guide",
-                author: "Carrie Warner",
-                company: "Community Coordinator and Lead Technical Writer at Mattermost",
-                image: "https://mattermost.com/wp-content/uploads/2021/03/Carrie-Warner-e1619991818834.webp"
-              },
-            ].map(({ quote, project, author, company, image }, i) => (
-              <div
-                key={i}
-                className="relative bg-white/50 backdrop-blur-sm p-8 lg:p-10 rounded-3xl border border-black/5 flex flex-col gap-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group overflow-hidden"
-              >
-                {/* Large Background Quote Ornament */}
-                <span className="absolute -top-6 -right-0 p-3 font-girassol text-[120px] text-primary/5 select-none pointer-events-none group-hover:text-primary/10 transition-colors duration-500">
-                  "
-                </span>
-
-                <h3 className="font-girassol italic text-2xl lg:text-3xl text-black leading-tight relative z-10">
-                  "{quote}"
-                </h3>
-
-                <div className="flex flex-col gap-4 mt-auto pt-8 border-t border-black/5 relative z-10">
-                  <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 aspect-square rounded-full overflow-hidden border-2 border-primary/20 grayscale group-hover:grayscale-0 transition-all duration-500 shadow-inner shrink-0">
-                      <img
-                        src={image}
-                        alt={author}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex flex-col">
-                      <h4 className="font-josefin font-bold text-lg text-black leading-none">
-                        {author}
-                      </h4>
-                      <p className="font-josefin text-sm text-muted uppercase tracking-wider mt-1">
-                        {company}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="font-josefin text-xs text-primary/60 italic tracking-wide">
-                    Regarding {project}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <Footer />
-    </main>
-  );
+function Testimonials() {
+  const items = [{ quote: "Actually one of the best genuine attempts at explaining Jamstack I've seen in years. Nicely done", project: "TakeShape's review of the Jamstack identity crisis", author: "Shawn Wang (swyx)", company: "one of the world's foremost dev-focused content creators", image: "https://www.swyx.io/swyx-ski.jpeg" }, { quote: "You're solving a good problem here - awesome!", project: "our work with Algolia", author: "Scott Mathson", company: "creator of Plink, formerly in marketing at Algolia", image: "https://scottmathson.com/assets/img/scott-mathson-photo-missoula-2023.JPG" }, { quote: "Thank you SO MUCH @jbaptista!! And kudos to you for taking on Hugo!", project: "the Mattermost Contributor Guide", author: "Carrie Warner", company: "Community Coordinator and Lead Technical Writer at Mattermost", image: "https://mattermost.com/wp-content/uploads/2021/03/Carrie-Warner-e1619991818834.webp" }];
+  return <section className="bg-background px-6 lg:px-24 py-20 lg:py-32"><div className="max-w-[1400px] mx-auto flex flex-col items-center"><h2 className="font-josefin font-bold text-2xl lg:text-3xl text-black uppercase tracking-widest text-center mb-16">What some folks have had to say about us</h2><div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">{items.map(({ quote, project, author, company, image }) => <div key={author} className="relative bg-white/50 backdrop-blur-sm p-8 lg:p-10 rounded-3xl border border-black/5 flex flex-col gap-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group overflow-hidden"><span className="absolute -top-6 -right-0 p-3 font-girassol text-[120px] text-primary/5 select-none pointer-events-none group-hover:text-primary/10 transition-colors duration-500">&quot;</span><h3 className="font-girassol italic text-2xl lg:text-3xl text-black leading-tight relative z-10">&quot;{quote}&quot;</h3><div className="flex flex-col gap-4 mt-auto pt-8 border-t border-black/5 relative z-10"><div className="flex items-center gap-4"><div className="w-16 h-16 aspect-square rounded-full overflow-hidden border-2 border-primary/20 grayscale group-hover:grayscale-0 transition-all duration-500 shadow-inner shrink-0"><img src={image} alt={author} className="w-full h-full object-cover" /></div><div className="flex flex-col"><h4 className="font-josefin font-bold text-lg text-black leading-none">{author}</h4><p className="font-josefin text-sm text-muted uppercase tracking-wider mt-1">{company}</p></div></div><p className="font-josefin text-xs text-primary/60 italic tracking-wide">Regarding {project}</p></div></div>)}</div></div></section>;
 }
