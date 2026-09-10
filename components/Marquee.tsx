@@ -3,7 +3,6 @@
 const SERVICES = [
   "Technical Content Writing",
   "Developer Advocacy",
-  "App Development",
   "Brand Consulting",
   "Graphic Design",
   "Blog, Tutorial, and Guide Writing",

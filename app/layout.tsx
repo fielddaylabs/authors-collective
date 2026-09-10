@@ -7,8 +7,8 @@ const girassol = Girassol({ variable: "--font-girassol", weight: "400", subsets:
 const dmSans = DM_Sans({ variable: "--font-dm-sans", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Authors Collective | Software, content, and design",
-  description: "Authors Collective creates useful software and offers technical content writing, brand consulting, and graphic design.",
+  title: "Authors Collective | Content, design, and strategy",
+  description: "Authors Collective offers technical content writing, brand consulting, graphic design, and other specialist work.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
