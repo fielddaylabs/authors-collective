@@ -7,6 +7,8 @@ year: "2026"
 client: Algolia
 category: Technical content + product demo
 canonicalUrl: https://authorscollective.org/work/algolia-agent-handoff/
+# Add the published Algolia article URL here when available:
+# articleUrl: https://www.algolia.com/blog/...
 heroImage: /brand/authors-collective-guild-primary.png
 heroImageAlt: Authors Collective grid mark for the specialized agent handoff case study
 ctas:
@@ -24,6 +26,10 @@ facts:
   - label: Delivery
     value: Native CMS script
 roles:
+  - label: Client
+    name: Algolia
+    href: https://www.algolia.com/
+    description: The company and technical audience at the center of this case study.
   - label: Editorial direction
     name: Authors Collective
     href: /

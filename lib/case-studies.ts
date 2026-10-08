@@ -20,6 +20,7 @@ export type CaseStudy = {
   client: string;
   category: string;
   canonicalUrl: string;
+  articleUrl?: string;
   heroImage?: string;
   heroImageAlt?: string;
   primaryCta: CaseStudyLink;
@@ -89,6 +90,7 @@ function parseCaseStudy(slug: string, file: string): CaseStudy {
     client: requiredString(data.client, "client"),
     category: requiredString(data.category, "category"),
     canonicalUrl: requiredString(data.canonicalUrl, "canonicalUrl"),
+    articleUrl: optionalString(data.articleUrl),
     heroImage: optionalString(data.heroImage),
     heroImageAlt: optionalString(data.heroImageAlt),
     primaryCta: ctas[0],

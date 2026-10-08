@@ -27,6 +27,7 @@ export default function CaseStudyTemplate({ study, html }: { study: CaseStudy; h
               <div className="mt-10 flex flex-wrap gap-3">
                 <ActionLink link={study.primaryCta} primary />
                 {study.secondaryCta && <ActionLink link={study.secondaryCta} />}
+                {study.articleUrl && <ActionLink link={{ label: "Read the Algolia article", href: study.articleUrl }} />}
               </div>
             </div>
             <dl className="grid grid-cols-2 gap-x-6 gap-y-7 border-t-2 border-black pt-6 font-josefin text-sm">

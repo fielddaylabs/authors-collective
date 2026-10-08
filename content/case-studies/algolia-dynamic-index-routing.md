@@ -7,6 +7,8 @@ year: "2026"
 client: Algolia
 category: Technical content + product demo
 canonicalUrl: https://authorscollective.org/work/algolia-dynamic-index-routing/
+# Add the published Algolia article URL here when available:
+# articleUrl: https://www.algolia.com/blog/...
 ctas:
   - label: Open the demo
     href: https://dynamic-index-routing-agent-studio.authorscollective.org/
@@ -22,6 +24,10 @@ facts:
   - label: Focus
     value: Application-owned search scope
 roles:
+  - label: Client
+    name: Algolia
+    href: https://www.algolia.com/
+    description: The company and technical audience at the center of this case study.
   - label: Editorial direction
     name: Authors Collective
     href: /
