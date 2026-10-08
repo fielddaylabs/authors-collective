@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
 
@@ -23,9 +24,14 @@ export default function AgentHandoffPage() {
             <a href="/agent-handoff/" className="block">
               <Image src="/brand/authors-collective-guild-primary.png" alt="Interactive example of a handoff between specialized agents" width={1024} height={1024} className="block w-full rounded-xl" />
             </a>
-            <span className="font-josefin text-xs text-black/50">Interactive demo by Authors Collective</span>
+            <span className="ach-fallback-credit font-josefin text-xs text-black/50">
+              Interactive demo by <Link href="/work/algolia-agent-handoff/" className="underline underline-offset-2">Authors Collective</Link> · development by <a href="https://www.fieldday.dev/work/algolia-agent-handoff/" className="underline underline-offset-2">Field Day Labs</a>
+            </span>
           </div>
         </div>
+        <p className="font-josefin text-sm text-black/55">
+          <Link href="/work/algolia-agent-handoff/" className="underline underline-offset-2">Read how this demo was commissioned and built</Link> by Authors Collective and Field Day Labs.
+        </p>
         <p className="font-josefin text-sm text-black/55">
           The switch is application-owned. It is not presented as a native Agent Studio agent-to-agent handoff.
         </p>

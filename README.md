@@ -42,10 +42,13 @@ The site publishes a native, dependency-free embed at `https://authorscollective
 ```html
 <div data-authors-collective-agent-handoff>
   <div data-handoff-fallback>
-    <a href="https://authorscollective.org/agent-handoff/">
+    <a href="https://authorscollective.org/work/algolia-agent-handoff/">
       <img src="https://authorscollective.org/brand/authors-collective-guild-primary.png" alt="Interactive example of a handoff between specialized agents">
     </a>
-    <span>Interactive demo by Authors Collective</span>
+    <span class="ach-fallback-credit">
+      Interactive demo by <a href="https://authorscollective.org/work/algolia-agent-handoff/">Authors Collective</a>
+      · development by <a href="https://www.fieldday.dev/work/algolia-agent-handoff/">Field Day Labs</a>
+    </span>
   </div>
 </div>
 <script src="https://authorscollective.org/agent-handoff.js" defer></script>

@@ -8,7 +8,7 @@
   var scriptUrl = script && script.src ? script.src : window.location.href;
   var scriptOrigin = new URL(scriptUrl, window.location.href).origin;
   var defaultImage = new URL("/brand/authors-collective-guild-primary.png", scriptOrigin).href;
-  var defaultHref = new URL("/agent-handoff/", scriptOrigin).href;
+  var defaultHref = new URL("/work/algolia-agent-handoff/", scriptOrigin).href;
 
   function id(prefix) {
     return prefix + "_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
@@ -76,7 +76,9 @@
       ".ach-status.ach-error{color:#a1291d}" +
       ".ach-fallback{display:grid;gap:9px;margin:0;padding:18px;border:1px solid #d8d3c5;border-radius:18px;background:#f7f4eb}" +
       ".ach-fallback img{display:block;width:100%;height:auto;border-radius:12px}" +
-      ".ach-fallback a{color:inherit;text-decoration:none}" +
+      ".ach-fallback> a:first-child{color:inherit;text-decoration:none}" +
+      ".ach-fallback-credit{font-size:13px;color:#817b70}" +
+      ".ach-fallback-credit a{color:inherit;text-decoration:underline;text-underline-offset:3px}" +
       ".ach-fallback-note{font-size:13px;color:#817b70}" +
       ".ach-hidden{display:none!important}";
   }
