@@ -7,10 +7,7 @@
   var defaultDemoOrigin = "https://dynamic-index-routing-agent-studio.authorscollective.org";
 
   function fallbackFor(mount) {
-    var id = mount.getAttribute("data-fallback-id");
-    if (id) return document.getElementById(id);
-    var next = mount.nextElementSibling;
-    return next && next.hasAttribute("data-authors-collective-dynamic-index-routing-fallback") ? next : null;
+    return mount.nextElementSibling;
   }
 
   function moveFallbackOutsideMount(mount, fallback) {
