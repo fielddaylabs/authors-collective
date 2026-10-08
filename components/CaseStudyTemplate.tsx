@@ -14,13 +14,13 @@ export default function CaseStudyTemplate({ study, html }: { study: CaseStudy; h
   return (
     <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-16">
-        <nav className="flex items-center justify-between border-b border-black/10 py-5 font-josefin text-xs uppercase tracking-[0.16em]">
+        <nav className="case-study-nav flex items-center justify-between border-b border-black/10 font-josefin text-xs uppercase tracking-[0.16em]">
           <Link href="/" className="font-semibold">Authors Collective</Link>
           <Link href="/team" className="text-black/55 underline underline-offset-4">About the collective</Link>
         </nav>
 
         <article>
-          <header className="grid gap-10 py-20 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-end lg:gap-20 lg:py-32">
+          <header className="case-study-hero grid gap-10 py-20 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-end lg:gap-20 lg:py-32">
             <div className="max-w-4xl">
               <h1 className="max-w-4xl font-girassol text-6xl leading-[0.96] text-black sm:text-7xl lg:text-[clamp(5rem,9vw,9.5rem)]">{study.title}</h1>
               <p className="mt-8 max-w-2xl font-josefin text-xl leading-relaxed text-black/65 lg:text-2xl">{study.lede}</p>
