@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Dynamic index routing in Agent Studio</title>
+  <desc id="desc">A diagram showing an application context selecting a route and a focused search scope for one Agent Studio agent.</desc>
+  <rect width="1200" height="675" fill="#f7f4eb"/>
+  <rect x="36" y="36" width="1128" height="603" rx="28" fill="#fff" stroke="#d8d3c5" stroke-width="3"/>
+  <text x="78" y="112" fill="#817b70" font-family="Arial, sans-serif" font-size="22" letter-spacing="4">APPLICATION-OWNED ROUTING</text>
+  <text x="78" y="178" fill="#171714" font-family="Arial, sans-serif" font-size="48" font-weight="700">Dynamic index routing</text>
+  <text x="78" y="218" fill="#817b70" font-family="Arial, sans-serif" font-size="23">One Agent Studio agent. A narrower search scope for each request.</text>
+  <g font-family="Arial, sans-serif">
+    <rect x="78" y="300" width="270" height="150" rx="18" fill="#f7f4eb" stroke="#d8d3c5" stroke-width="3"/>
+    <text x="108" y="348" fill="#817b70" font-size="18" letter-spacing="2">CONTEXT</text>
+    <text x="108" y="395" fill="#171714" font-size="27" font-weight="700">Product question</text>
+    <text x="108" y="428" fill="#817b70" font-size="18">or support question</text>
+    <path d="M380 375h115" stroke="#d73524" stroke-width="5"/><path d="m480 355 28 20-28 20" fill="none" stroke="#d73524" stroke-width="5"/>
+    <rect x="535" y="300" width="270" height="150" rx="18" fill="#171714"/>
+    <text x="565" y="348" fill="#c9c1b4" font-size="18" letter-spacing="2">ROUTE</text>
+    <text x="565" y="395" fill="#fff" font-size="27" font-weight="700">Server allowlist</text>
+    <text x="565" y="428" fill="#c9c1b4" font-size="18">same agent, approved scope</text>
+    <path d="M837 375h115" stroke="#d73524" stroke-width="5"/><path d="m937 355 28 20-28 20" fill="none" stroke="#d73524" stroke-width="5"/>
+    <rect x="992" y="300" width="130" height="150" rx="18" fill="#d73524"/>
+    <text x="1017" y="348" fill="#fff" font-size="18" letter-spacing="2">SCOPE</text>
+    <text x="1017" y="395" fill="#fff" font-size="23" font-weight="700">Focused</text>
+    <text x="1017" y="428" fill="#fff" font-size="18">index</text>
+  </g>
+  <text x="78" y="556" fill="#817b70" font-family="Arial, sans-serif" font-size="20">Open the interactive demo to inspect the route, request scope, and search evidence.</text>
+</svg>
