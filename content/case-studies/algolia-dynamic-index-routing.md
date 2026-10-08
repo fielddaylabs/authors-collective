@@ -1,6 +1,5 @@
 ---
 slug: algolia-dynamic-index-routing
-kicker: Case study / Authors Collective × Field Day Labs
 title: Making dynamic index routing visible in Agent Studio
 description: How Authors Collective and Field Day Labs turned an Agent Studio routing pattern into a practical, interactive companion for a technical article.
 lede: A working demo that lets readers compare product and support contexts, inspect the selected search scope, and see why the application should own the routing decision.

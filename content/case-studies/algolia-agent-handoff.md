@@ -1,6 +1,5 @@
 ---
 slug: algolia-agent-handoff
-kicker: Case study / Authors Collective × Field Day Labs
 title: A clean handoff between specialized agents
 description: How Authors Collective and Field Day Labs built a practical, application-owned example of handing a conversation from one specialized agent to another.
 lede: One conversation surface, an application-owned routing decision, and a deliberately small packet of context passed to the next specialist.

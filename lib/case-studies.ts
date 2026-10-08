@@ -14,7 +14,6 @@ export type CaseStudyFact = { label: string; value: string };
 export type CaseStudy = {
   slug: string;
   title: string;
-  kicker: string;
   description: string;
   lede: string;
   year: string;
@@ -84,7 +83,6 @@ function parseCaseStudy(slug: string, file: string): CaseStudy {
   return {
     slug: parsedSlug,
     title: requiredString(data.title, "title"),
-    kicker: requiredString(data.kicker, "kicker"),
     description: requiredString(data.description, "description"),
     lede: requiredString(data.lede, "lede"),
     year: requiredString(data.year, "year"),
