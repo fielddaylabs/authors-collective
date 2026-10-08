@@ -9,7 +9,7 @@ const allowedAgents = {
   support: "SUPPORT_AGENT_STUDIO_AGENT_ID",
 } as const;
 const allowedDestinations = new Set(["sales", "support"] as const);
-const publicOrigins = new Set(["https://authorscollective.org"]);
+const publicOrigins = new Set(["https://authorscollective.org", "https://www.authorscollective.org"]);
 
 type Agent = keyof typeof allowedAgents;
 type ProviderErrorKind =
