@@ -9,6 +9,7 @@ const allowedAgents = {
   support: "SUPPORT_AGENT_STUDIO_AGENT_ID",
 } as const;
 const allowedDestinations = new Set(["sales", "support"] as const);
+const publicOrigins = new Set(["https://authorscollective.org"]);
 
 type Agent = keyof typeof allowedAgents;
 type ProviderErrorKind =
@@ -32,6 +33,7 @@ function allowedOrigins() {
 function originIsAllowed(request: Request, origin: string | null) {
   if (!origin) return true;
   if (origin === new URL(request.url).origin) return true;
+  if (publicOrigins.has(origin)) return true;
   return allowedOrigins().has(origin);
 }
 
