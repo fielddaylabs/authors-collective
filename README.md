@@ -34,3 +34,21 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Agent handoff embed
+
+The site publishes a native, dependency-free embed at `https://authorscollective.org/agent-handoff.js`. The CMS can place it inside an article with a static fallback so the selected image remains available if the script, browser, or provider is unavailable:
+
+```html
+<div data-authors-collective-agent-handoff>
+  <div data-handoff-fallback>
+    <a href="https://authorscollective.org/agent-handoff/">
+      <img src="https://authorscollective.org/brand/authors-collective-guild-primary.png" alt="Interactive example of a handoff between specialized agents">
+    </a>
+    <span>Interactive demo by Authors Collective</span>
+  </div>
+</div>
+<script src="https://authorscollective.org/agent-handoff.js" defer></script>
+```
+
+The script is browser-only. Agent Studio credentials and agent IDs are read exclusively by `app/api/agent-handoff/route.ts` from server environment variables. Configure the exact Algolia blog origin in `AGENT_HANDOFF_ALLOWED_ORIGINS`; do not use a wildcard origin.
