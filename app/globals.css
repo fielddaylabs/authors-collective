@@ -13,11 +13,19 @@ body { background: var(--background); color: var(--foreground); font-family: var
 :focus-visible { outline: 3px solid var(--primary); outline-offset: 4px; }
 
 .case-study-nav { height: 82px; padding-block: 0; }
-.case-study-hero { height: calc(100vh - 82px); height: calc(100dvh - 82px); }
+.case-study-hero { height: calc(100vh - 82px); height: calc(100dvh - 82px); align-content: center; gap: clamp(1.25rem, 4vh, 3.5rem); padding-block: clamp(1.5rem, 5vh, 4.5rem); }
+.case-study-hero h1 { font-size: clamp(3.5rem, min(9vw, 11vh), 9.5rem); margin-block: 0; text-wrap: balance; }
+.case-study-lede { font-size: clamp(1.1rem, min(2vw, 3vh), 1.5rem); line-height: 1.4; margin-top: clamp(1rem, 2.5vh, 2rem); }
+.case-study-actions { gap: .5rem; margin-top: clamp(1.25rem, 3vh, 2.5rem); }
+.case-study-actions a { min-height: 44px; padding-block: .625rem; }
+.case-study-facts { gap: clamp(.75rem, 2vh, 1.75rem) 1.5rem; padding-top: clamp(.75rem, 2vh, 1.5rem); }
 
 @media (max-width: 760px) {
   .case-study-nav { height: 68px; }
-  .case-study-hero { height: calc(100vh - 68px); height: calc(100dvh - 68px); }
+  .case-study-hero { height: calc(100vh - 68px); height: calc(100dvh - 68px); gap: clamp(1rem, 3vh, 1.75rem); padding-block: clamp(1.5rem, 5vh, 3rem); }
+  .case-study-hero h1 { font-size: clamp(3rem, min(13vw, 6.5vh), 5.5rem); }
+  .case-study-lede { font-size: clamp(1rem, min(4.5vw, 2.3vh), 1.25rem); line-height: 1.35; }
+  .case-study-facts { gap: .75rem 1rem; padding-top: .75rem; }
 }
 
 .case-study-prose { color: rgb(0 0 0 / .68); font-family: var(--font-josefin); font-size: 1.08rem; line-height: 1.8; }

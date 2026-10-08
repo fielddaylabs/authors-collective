@@ -23,14 +23,14 @@ export default function CaseStudyTemplate({ study, html }: { study: CaseStudy; h
           <header className="case-study-hero grid gap-10 py-20 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-end lg:gap-20 lg:py-32">
             <div className="max-w-4xl">
               <h1 className="max-w-4xl font-girassol text-6xl leading-[0.96] text-black sm:text-7xl lg:text-[clamp(5rem,9vw,9.5rem)]">{study.title}</h1>
-              <p className="mt-8 max-w-2xl font-josefin text-xl leading-relaxed text-black/65 lg:text-2xl">{study.lede}</p>
-              <div className="mt-10 flex flex-wrap gap-3">
+              <p className="case-study-lede mt-8 max-w-2xl font-josefin text-xl leading-relaxed text-black/65 lg:text-2xl">{study.lede}</p>
+              <div className="case-study-actions mt-10 flex flex-wrap gap-3">
                 <ActionLink link={study.primaryCta} primary />
                 {study.secondaryCta && <ActionLink link={study.secondaryCta} />}
                 {study.articleUrl && <ActionLink link={{ label: "Read the Algolia article", href: study.articleUrl }} />}
               </div>
             </div>
-            <dl className="grid grid-cols-2 gap-x-6 gap-y-7 border-t-2 border-black pt-6 font-josefin text-sm">
+            <dl className="case-study-facts grid grid-cols-2 gap-x-6 gap-y-7 border-t-2 border-black pt-6 font-josefin text-sm">
               {study.facts.map((fact) => <div key={fact.label}><dt className="text-xs uppercase tracking-[0.16em] text-black/45">{fact.label}</dt><dd className="mt-2 text-black">{fact.value}</dd></div>)}
             </dl>
           </header>
