@@ -11,3 +11,14 @@
 
 body { background: var(--background); color: var(--foreground); font-family: var(--font-dm-sans); }
 :focus-visible { outline: 3px solid var(--primary); outline-offset: 4px; }
+
+.case-study-prose { color: rgb(0 0 0 / .68); font-family: var(--font-josefin); font-size: 1.08rem; line-height: 1.8; }
+.case-study-prose h2 { color: #000; font-family: var(--font-girassol); font-size: clamp(2.2rem, 5vw, 4.5rem); line-height: 1; margin: 3.5rem 0 1.25rem; }
+.case-study-prose h2:first-child { margin-top: 0; }
+.case-study-prose h3 { color: #000; font-family: var(--font-girassol); font-size: 2rem; line-height: 1.1; margin: 2.5rem 0 .75rem; }
+.case-study-prose p { margin: 0 0 1.4rem; }
+.case-study-prose ul { display: grid; gap: 1rem; list-style: none; margin: 1.5rem 0 2rem; padding: 0; }
+.case-study-prose li { border-left: 3px solid var(--primary); padding-left: 1rem; }
+.case-study-prose strong { color: #000; font-weight: 700; }
+.case-study-prose a { color: #000; text-decoration: underline; text-decoration-color: var(--primary); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.case-study-prose blockquote { border-left: 3px solid #000; color: #000; font-family: var(--font-girassol); font-size: 1.5rem; line-height: 1.25; margin: 2rem 0; padding-left: 1.25rem; }
