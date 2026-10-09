@@ -48,7 +48,7 @@ export default function CaseStudyTemplate({ study, html }: { study: CaseStudy; h
           </div>
 
           <footer className="flex flex-col gap-6 border-t-2 border-black py-10 font-josefin sm:flex-row sm:items-center sm:justify-between">
-            <p className="max-w-xl text-sm leading-relaxed text-black/60">A case study for {study.client}, by {study.roles.map((role, index) => <span key={role.name}>{index > 0 && " · "}{role.href ? <a href={role.href} className="text-black underline decoration-primary decoration-2 underline-offset-4">{role.name}</a> : role.name}</span>)}.</p>
+            <p className="max-w-xl text-sm leading-relaxed text-black/60">A case study for {study.client}, by {study.roles.filter((role) => role.label !== "Client").map((role, index) => <span key={role.name}>{index > 0 && " · "}{role.href ? <a href={role.href} className="text-black underline decoration-primary decoration-2 underline-offset-4">{role.name}</a> : role.name}</span>)}.</p>
             <ActionLink link={study.primaryCta} />
           </footer>
         </article>
