@@ -13,7 +13,7 @@ heroImage: /brand/authors-collective-guild-primary.png
 heroImageAlt: Authors Collective grid mark for the specialized agent handoff case study
 ctas:
   - label: Open the demo
-    href: /agent-handoff/
+    href: https://specialized-agent-handoff.authorscollective.org/
   - label: Visit Field Day Labs
     href: https://www.fieldday.dev/work/algolia-agent-handoff/
 facts:
@@ -59,4 +59,4 @@ This is an explanatory demo, not a claim that every agent platform provides nati
 
 ## Keep exploring
 
-Read the [Field Day Labs build notes](https://www.fieldday.dev/work/algolia-agent-handoff/) or [open the live example](/agent-handoff/) to see the boundary in context.
+Read the [Field Day Labs build notes](https://www.fieldday.dev/work/algolia-agent-handoff/) or [open the live example](https://specialized-agent-handoff.authorscollective.org/) to see the boundary in context.
