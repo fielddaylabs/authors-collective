@@ -55,3 +55,19 @@ The site publishes a native, dependency-free embed at `https://authorscollective
 ```
 
 The script is browser-only. Agent Studio credentials and agent IDs are read exclusively by `app/api/agent-handoff/route.ts` from server environment variables. Configure the exact Algolia blog origin in `AGENT_HANDOFF_ALLOWED_ORIGINS`; do not use a wildcard origin.
+
+## Toggle headings embed
+
+The site also publishes a dependency-free heading toggle script at `https://authorscollective.org/toggle-headings.js`. It supports `h1` through `h6`, matches headings by normalized text, and can be called from an article page after loading:
+
+```html
+<script src="https://authorscollective.org/toggle-headings.js" defer></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    toggleHeadings(
+      "Output guardrails",
+      "Guardrails manage risk, not eliminate it"
+    );
+  });
+</script>
+```
