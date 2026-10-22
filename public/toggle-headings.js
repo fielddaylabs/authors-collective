@@ -26,6 +26,7 @@
     style.textContent = `
       .agent-toggle-heading {
         position: relative;
+        cursor: pointer;
       }
 
       .agent-toggle-button {
@@ -240,6 +241,19 @@
     }
 
     button.addEventListener("click", () => {
+      setExpanded(!state.expanded);
+    });
+
+    heading.addEventListener("click", (event) => {
+      const target = event.target;
+
+      if (
+        target instanceof Element &&
+        target.closest("button, a, input, textarea, select, summary, [role=\"button\"]")
+      ) {
+        return;
+      }
+
       setExpanded(!state.expanded);
     });
 
