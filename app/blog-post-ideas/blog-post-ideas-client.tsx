@@ -47,6 +47,8 @@ export default function BlogPostIdeasClient() {
   const savingRef = useRef(new Set<string>());
   const debounceTimers = useRef(new Map<string, ReturnType<typeof setTimeout>>());
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const desktopIdeaInputRefs = useRef(new Map<string, HTMLInputElement>());
+  const mobileIdeaInputRefs = useRef(new Map<string, HTMLInputElement>());
   const saveRowRef = useRef<(row: Row) => void>(() => undefined);
 
   const loadRows = useCallback(async () => {
@@ -163,6 +165,19 @@ export default function BlogPostIdeasClient() {
     setError("");
     setToast("");
     scheduleAutoSave(id);
+  }
+
+  function addIdea() {
+    setError("");
+    setToast("");
+    const row = blankRow(session!.name);
+    const nextRows = [row, ...rowsRef.current];
+    rowsRef.current = nextRows;
+    setRows(nextRows);
+    requestAnimationFrame(() => {
+      const isMobile = window.matchMedia("(max-width: 900px)").matches;
+      (isMobile ? mobileIdeaInputRefs : desktopIdeaInputRefs).current.get(row.id)?.focus();
+    });
   }
 
   function rowIsDirty(row: Row) {
@@ -298,20 +313,20 @@ export default function BlogPostIdeasClient() {
     </header>
     <section className="ideas-content">
       <div className="ideas-heading-row">
-        <div>
-          <h1>Blog Post Ideas</h1>
-        </div>
+        <h1>Blog Post Ideas</h1>
+        <p className="ideas-count">{rows.length} {rows.length === 1 ? "idea" : "ideas"}<span aria-hidden="true"> · </span>{visibleRows.length} shown</p>
       </div>
 
       <div className="ideas-toolbar">
         <label className="ideas-search"><span className="sr-only">Filter ideas</span><input value={filter} onChange={(event) => setFilter(event.target.value)} placeholder="Find an idea or SME" /></label>
-        <button type="button" className="ideas-primary-button ideas-add-button" onClick={() => { setError(""); setToast(""); const nextRows = [blankRow(session.name), ...rowsRef.current]; rowsRef.current = nextRows; setRows(nextRows); }}>＋ Add idea</button>
+        <button type="button" className="ideas-primary-button ideas-add-button" onClick={addIdea}><span aria-hidden="true">＋</span> New idea</button>
       </div>
 
       {error && <p className="ideas-error ideas-banner" role="alert">{error}</p>}
 
       <div className="ideas-sheet-wrap" role="region" aria-label="Editable blog post ideas spreadsheet" tabIndex={0}>
         <table className="ideas-sheet">
+          <caption className="sr-only">Editable blog post ideas. Changes save automatically after five seconds.</caption>
           <thead><tr>
             <th scope="col" className="idea-column">Idea</th>
             <th scope="col">SME</th>
@@ -326,7 +341,7 @@ export default function BlogPostIdeasClient() {
               const busy = savingIds.has(row.id);
               const dirty = rowIsDirty(row);
               return <tr key={row.id} className={row.isNew ? "ideas-new-row" : undefined}>
-                <td><input aria-label={`Idea${row.idea ? `: ${row.idea}` : ""}`} className="ideas-cell-input idea-input" value={row.idea} maxLength={500} placeholder="A clear, specific idea" onChange={(event) => updateRow(row.id, "idea", event.target.value)} /></td>
+                <th scope="row" className="idea-row-header"><input ref={(element) => { if (element) desktopIdeaInputRefs.current.set(row.id, element); else desktopIdeaInputRefs.current.delete(row.id); }} data-idea-id={row.id} aria-label={`Idea${row.idea ? `: ${row.idea}` : ""}`} className="ideas-cell-input idea-input" value={row.idea} maxLength={500} placeholder="A clear, specific idea" onChange={(event) => updateRow(row.id, "idea", event.target.value)} /></th>
                 <td><input aria-label={`SME for ${row.idea || "new idea"}`} className="ideas-cell-input" value={row.sme} maxLength={200} placeholder="Name" onChange={(event) => updateRow(row.id, "sme", event.target.value)} /></td>
                 <td><input aria-label={`Idea Creator for ${row.idea || "new idea"}`} className="ideas-cell-input creator-input" value={row.isNew ? session.name : row.ideaCreator} readOnly /></td>
                 <td><input aria-label={`SME Contact Info for ${row.idea || "new idea"}`} className="ideas-cell-input" value={row.smeContactInfo} maxLength={500} placeholder="Email or contact" onChange={(event) => updateRow(row.id, "smeContactInfo", event.target.value)} /></td>
@@ -344,7 +359,27 @@ export default function BlogPostIdeasClient() {
           </tbody>
         </table>
       </div>
-      <footer className="ideas-footer"><span>{rows.length} {rows.length === 1 ? "idea" : "ideas"}</span><span>Each row saves directly to Jaden&apos;s Notion workspace.</span></footer>
+      <div className="ideas-mobile-list" aria-label="Blog post ideas">
+        {loadingRows && <p className="ideas-mobile-empty">Loading ideas…</p>}
+        {!loadingRows && visibleRows.length === 0 && <p className="ideas-mobile-empty">{filter ? "No ideas match that filter." : "No ideas yet. Add the first one to start the list."}</p>}
+        {visibleRows.map((row) => {
+          const busy = savingIds.has(row.id);
+          const dirty = rowIsDirty(row);
+          return <article className={`ideas-card${row.isNew ? " ideas-new-row" : ""}`} key={`mobile-${row.id}`}>
+            <div className="ideas-card-topline"><label className="ideas-card-idea-label" htmlFor={`mobile-idea-${row.id}`}>Idea</label><select aria-label={`Status for ${row.idea || "new idea"}`} className="ideas-card-status" value={row.status} onChange={(event) => updateRow(row.id, "status", event.target.value)}>{STATUSES.map((status) => <option key={status} value={status}>{status}</option>)}</select></div>
+            <input ref={(element) => { if (element) mobileIdeaInputRefs.current.set(row.id, element); else mobileIdeaInputRefs.current.delete(row.id); }} id={`mobile-idea-${row.id}`} aria-label={`Idea${row.idea ? `: ${row.idea}` : ""}`} className="ideas-cell-input ideas-card-title" value={row.idea} maxLength={500} placeholder="A clear, specific idea" onChange={(event) => updateRow(row.id, "idea", event.target.value)} />
+            <label className="ideas-mobile-field"><span>Subject matter expert</span><input aria-label={`SME for ${row.idea || "new idea"}`} className="ideas-cell-input" value={row.sme} maxLength={200} placeholder="Name" onChange={(event) => updateRow(row.id, "sme", event.target.value)} /></label>
+            <details className="ideas-card-details" open={Boolean(row.isNew)}>
+              <summary>Contact, questions, and creator</summary>
+              <label className="ideas-mobile-field"><span>Idea Creator</span><input aria-label={`Idea Creator for ${row.idea || "new idea"}`} className="ideas-cell-input creator-input" value={row.isNew ? session.name : row.ideaCreator} readOnly /></label>
+              <label className="ideas-mobile-field"><span>SME Contact Info</span><input aria-label={`SME Contact Info for ${row.idea || "new idea"}`} className="ideas-cell-input" value={row.smeContactInfo} maxLength={500} placeholder="Email or contact" onChange={(event) => updateRow(row.id, "smeContactInfo", event.target.value)} /></label>
+              <label className="ideas-mobile-field"><span>Questions to Ask</span><textarea aria-label={`Questions to Ask for ${row.idea || "new idea"}`} className="ideas-cell-input ideas-cell-textarea" value={row.questionsToAsk} maxLength={2_000} placeholder="What should we ask?" rows={3} onChange={(event) => updateRow(row.id, "questionsToAsk", event.target.value)} /></label>
+            </details>
+            <div className="ideas-card-bottomline"><span className="ideas-row-state" role="status">{busy ? "Saving…" : dirty ? row.idea.trim() ? "Auto-saves in 5 seconds" : "Add an idea to save" : ""}</span><button type="button" className="ideas-delete-button" onClick={() => void deleteRow(row)} disabled={busy}>{row.isNew ? "Remove" : "Delete"}</button></div>
+          </article>;
+        })}
+      </div>
+      <footer className="ideas-footer"><span>Each row saves directly to Jaden&apos;s Notion workspace.</span></footer>
     </section>
     {toast && <div className="ideas-saved-toast" role="status" aria-live="polite" aria-atomic="true"><span aria-hidden="true">✓</span>{toast}</div>}
   </main>;
