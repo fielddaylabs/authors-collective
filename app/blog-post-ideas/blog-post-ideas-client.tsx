@@ -141,6 +141,12 @@ export default function BlogPostIdeasClient() {
   }
 
   async function signOut() {
+    const pendingRows = rowsRef.current.filter((row) => row.idea.trim() && rowIsDirty(row));
+    if (pendingRows.length) await Promise.all(pendingRows.map((row) => saveRow(row)));
+    if (rowsRef.current.some((row) => row.idea.trim() && rowIsDirty(row))) {
+      setError("Some edits have not saved yet. Wait for saving to finish, then sign out.");
+      return;
+    }
     for (const id of debounceTimers.current.keys()) clearAutoSave(id);
     rowsRef.current = [];
     savedRowsRef.current = [];
@@ -229,8 +235,8 @@ export default function BlogPostIdeasClient() {
   saveRowRef.current = (row) => { void saveRow(row); };
 
   async function deleteRow(row: Row) {
-    clearAutoSave(row.id);
     if (row.isNew) {
+      clearAutoSave(row.id);
       const nextRows = rowsRef.current.filter((item) => item.id !== row.id);
       rowsRef.current = nextRows;
       setRows(nextRows);
@@ -238,6 +244,7 @@ export default function BlogPostIdeasClient() {
     }
     if (savingRef.current.has(row.id)) return;
     if (!window.confirm(`Move “${row.idea || "this idea"}” to Notion trash?`)) return;
+    clearAutoSave(row.id);
     savingRef.current.add(row.id);
     setSavingIds((current) => new Set(current).add(row.id));
     setError("");
