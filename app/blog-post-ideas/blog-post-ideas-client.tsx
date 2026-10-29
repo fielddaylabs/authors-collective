@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 
 type Row = {
@@ -11,8 +11,6 @@ type Row = {
   smeContactInfo: string;
   questionsToAsk: string;
   status: string;
-  topicKeyword: string;
-  targetPublishDate: string;
   isNew?: boolean;
 };
 
@@ -27,11 +25,11 @@ async function jsonRequest(url: string, init?: RequestInit): Promise<{ response:
 }
 
 function blankRow(name: string): Row {
-  return { id: `new-${crypto.randomUUID()}`, idea: "", sme: "", ideaCreator: name, smeContactInfo: "", questionsToAsk: "", status: "New", topicKeyword: "", targetPublishDate: "", isNew: true };
+  return { id: `new-${crypto.randomUUID()}`, idea: "", sme: "", ideaCreator: name, smeContactInfo: "", questionsToAsk: "", status: "New", isNew: true };
 }
 
 function rowValues(row: Row) {
-  return { idea: row.idea, sme: row.sme, smeContactInfo: row.smeContactInfo, questionsToAsk: row.questionsToAsk, status: row.status, topicKeyword: row.topicKeyword, targetPublishDate: row.targetPublishDate };
+  return { idea: row.idea, sme: row.sme, smeContactInfo: row.smeContactInfo, questionsToAsk: row.questionsToAsk, status: row.status };
 }
 
 export default function BlogPostIdeasClient() {
@@ -40,12 +38,17 @@ export default function BlogPostIdeasClient() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [rows, setRows] = useState<Row[]>([]);
-  const [savedRows, setSavedRows] = useState<Row[]>([]);
   const [loadingRows, setLoadingRows] = useState(false);
-  const [savingId, setSavingId] = useState<string | null>(null);
+  const [savingIds, setSavingIds] = useState<Set<string>>(new Set());
   const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
+  const [toast, setToast] = useState("");
   const [filter, setFilter] = useState("");
+  const rowsRef = useRef<Row[]>([]);
+  const savedRowsRef = useRef<Row[]>([]);
+  const savingRef = useRef(new Set<string>());
+  const debounceTimers = useRef(new Map<string, ReturnType<typeof setTimeout>>());
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const saveRowRef = useRef<(row: Row) => void>(() => undefined);
 
   const loadRows = useCallback(async () => {
     setLoadingRows(true);
@@ -54,14 +57,16 @@ export default function BlogPostIdeasClient() {
       const { response, body } = await jsonRequest("/api/blog-post-ideas");
       if (response.status === 401) {
         setSession(null);
+        rowsRef.current = [];
+        savedRowsRef.current = [];
         setRows([]);
-        setSavedRows([]);
         return;
       }
       if (!response.ok) throw new Error(typeof body.error === "string" ? body.error : "Could not load the spreadsheet.");
       const items = Array.isArray(body.rows) ? body.rows as Row[] : [];
+      rowsRef.current = items;
+      savedRowsRef.current = items;
       setRows(items);
-      setSavedRows(items);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Could not load the spreadsheet.");
     } finally {
@@ -88,13 +93,40 @@ export default function BlogPostIdeasClient() {
   const visibleRows = useMemo(() => {
     const query = filter.trim().toLocaleLowerCase();
     if (!query) return rows;
-    return rows.filter((row) => [row.idea, row.sme, row.ideaCreator, row.topicKeyword].some((value) => value.toLocaleLowerCase().includes(query)));
+    return rows.filter((row) => [row.idea, row.sme, row.ideaCreator].some((value) => value.toLocaleLowerCase().includes(query)));
   }, [filter, rows]);
+
+  function clearAutoSave(id: string) {
+    const timer = debounceTimers.current.get(id);
+    if (timer) clearTimeout(timer);
+    debounceTimers.current.delete(id);
+  }
+
+  function scheduleAutoSave(id: string) {
+    clearAutoSave(id);
+    const timer = setTimeout(() => {
+      debounceTimers.current.delete(id);
+      const row = rowsRef.current.find((item) => item.id === id);
+      if (row?.idea.trim()) saveRowRef.current(row);
+    }, 5_000);
+    debounceTimers.current.set(id, timer);
+  }
+
+  function showSavedToast(message = "Saved") {
+    setToast(message);
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast(""), 2_400);
+  }
+
+  useEffect(() => () => {
+    for (const timer of debounceTimers.current.values()) clearTimeout(timer);
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+  }, []);
 
   async function signIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
-    setNotice("");
+    setToast("");
     try {
       const { response, body } = await jsonRequest("/api/blog-post-ideas/session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, password }) });
       if (!response.ok) throw new Error(typeof body.error === "string" ? body.error : "Could not sign in.");
@@ -109,66 +141,106 @@ export default function BlogPostIdeasClient() {
   }
 
   async function signOut() {
+    for (const id of debounceTimers.current.keys()) clearAutoSave(id);
+    rowsRef.current = [];
+    savedRowsRef.current = [];
     await fetch("/api/blog-post-ideas/session", { method: "DELETE" }).catch(() => undefined);
     setSession(null);
     setRows([]);
-    setSavedRows([]);
-    setNotice("");
+    setToast("");
     setError("");
   }
 
   function updateRow(id: string, field: keyof Row, value: string) {
-    setRows((current) => current.map((row) => row.id === id ? { ...row, [field]: value } : row));
-  }
-
-  function cancelRow(row: Row) {
-    if (row.isNew) {
-      setRows((current) => current.filter((item) => item.id !== row.id));
-      return;
-    }
-    const original = savedRows.find((item) => item.id === row.id);
-    if (original) setRows((current) => current.map((item) => item.id === row.id ? original : item));
+    const next = rowsRef.current.map((row) => row.id === id ? { ...row, [field]: value } : row);
+    rowsRef.current = next;
+    setRows(next);
+    setError("");
+    setToast("");
+    scheduleAutoSave(id);
   }
 
   function rowIsDirty(row: Row) {
     if (row.isNew) return true;
-    const original = savedRows.find((item) => item.id === row.id);
+    const original = savedRowsRef.current.find((item) => item.id === row.id);
     return Boolean(original && JSON.stringify(rowValues(row)) !== JSON.stringify(rowValues(original)));
   }
 
   async function saveRow(row: Row) {
-    setSavingId(row.id);
+    if (!row.idea.trim() || savingRef.current.has(row.id)) return;
+    const requestId = row.id;
+    const submittedValues = JSON.stringify(rowValues(row));
+    const wasNew = Boolean(row.isNew);
+    savingRef.current.add(requestId);
+    setSavingIds((current) => new Set(current).add(requestId));
     setError("");
-    setNotice("");
+    let savedSuccessfully = false;
+    let persistedId = requestId;
     try {
       const { response, body } = await jsonRequest("/api/blog-post-ideas", {
-        method: row.isNew ? "POST" : "PATCH",
+        method: wasNew ? "POST" : "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...(row.isNew ? {} : { id: row.id }), ...rowValues(row) }),
+        body: JSON.stringify({ ...(!wasNew ? { id: row.id } : {}), ...rowValues(row) }),
       });
       if (response.status === 401) {
         setSession(null);
         throw new Error("Your session expired. Sign in again.");
       }
       if (!response.ok) throw new Error(typeof body.error === "string" ? body.error : "Could not save this row.");
-      await loadRows();
-      setNotice(row.isNew ? "Idea added." : "Changes saved.");
+      const persisted = body.row as Row | undefined;
+      if (!persisted || typeof persisted.id !== "string") throw new Error("The saved row could not be confirmed.");
+      persistedId = persisted.id;
+      const current = rowsRef.current.find((item) => item.id === requestId);
+      const changedDuringSave = Boolean(current && JSON.stringify(rowValues(current)) !== submittedValues);
+      const saved = { ...persisted, isNew: undefined };
+      const nextRows = rowsRef.current.map((item) => item.id === requestId
+        ? changedDuringSave && current
+          ? { ...current, id: persisted.id, ideaCreator: persisted.ideaCreator, isNew: false }
+          : saved
+        : item);
+      rowsRef.current = nextRows;
+      setRows(nextRows);
+      const nextSavedRows = savedRowsRef.current.some((item) => item.id === persisted.id)
+        ? savedRowsRef.current.map((item) => item.id === persisted.id ? saved : item)
+        : [saved, ...savedRowsRef.current];
+      savedRowsRef.current = nextSavedRows;
+      savedSuccessfully = true;
+      showSavedToast();
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Could not save this row.");
     } finally {
-      setSavingId(null);
+      savingRef.current.delete(requestId);
+      setSavingIds((current) => {
+        const next = new Set(current);
+        next.delete(requestId);
+        return next;
+      });
+      if (savedSuccessfully) {
+        const current = rowsRef.current.find((item) => item.id === persistedId);
+        const original = savedRowsRef.current.find((item) => item.id === persistedId);
+        if (current && original && JSON.stringify(rowValues(current)) !== JSON.stringify(rowValues(original))) {
+          if (requestId !== persistedId) clearAutoSave(requestId);
+          if (!debounceTimers.current.has(persistedId)) scheduleAutoSave(persistedId);
+        }
+      }
     }
   }
 
+  saveRowRef.current = (row) => { void saveRow(row); };
+
   async function deleteRow(row: Row) {
+    clearAutoSave(row.id);
     if (row.isNew) {
-      cancelRow(row);
+      const nextRows = rowsRef.current.filter((item) => item.id !== row.id);
+      rowsRef.current = nextRows;
+      setRows(nextRows);
       return;
     }
+    if (savingRef.current.has(row.id)) return;
     if (!window.confirm(`Move “${row.idea || "this idea"}” to Notion trash?`)) return;
-    setSavingId(row.id);
+    savingRef.current.add(row.id);
+    setSavingIds((current) => new Set(current).add(row.id));
     setError("");
-    setNotice("");
     try {
       const { response, body } = await jsonRequest("/api/blog-post-ideas", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: row.id }) });
       if (response.status === 401) {
@@ -176,12 +248,21 @@ export default function BlogPostIdeasClient() {
         throw new Error("Your session expired. Sign in again.");
       }
       if (!response.ok) throw new Error(typeof body.error === "string" ? body.error : "Could not delete this row.");
-      await loadRows();
-      setNotice("Idea moved to Notion trash.");
+      const nextRows = rowsRef.current.filter((item) => item.id !== row.id);
+      const nextSavedRows = savedRowsRef.current.filter((item) => item.id !== row.id);
+      rowsRef.current = nextRows;
+      savedRowsRef.current = nextSavedRows;
+      setRows(nextRows);
+      showSavedToast("Deleted");
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Could not delete this row.");
     } finally {
-      setSavingId(null);
+      savingRef.current.delete(row.id);
+      setSavingIds((current) => {
+        const next = new Set(current);
+        next.delete(row.id);
+        return next;
+      });
     }
   }
 
@@ -221,13 +302,12 @@ export default function BlogPostIdeasClient() {
       </div>
 
       <div className="ideas-toolbar">
-        <div className="ideas-toolbar-note"><span className="ideas-live-dot" aria-hidden="true" />Changes are shared with the team</div>
+        <div className="ideas-toolbar-note"><span className="ideas-live-dot" aria-hidden="true" />Changes save after 5 seconds of inactivity</div>
         <label className="ideas-search"><span className="sr-only">Filter ideas</span><input value={filter} onChange={(event) => setFilter(event.target.value)} placeholder="Find an idea or SME" /></label>
-        <button type="button" className="ideas-primary-button ideas-add-button" onClick={() => { setError(""); setNotice(""); setRows((current) => [blankRow(session.name), ...current]); }}>＋ Add idea</button>
+        <button type="button" className="ideas-primary-button ideas-add-button" onClick={() => { setError(""); setToast(""); const nextRows = [blankRow(session.name), ...rowsRef.current]; rowsRef.current = nextRows; setRows(nextRows); }}>＋ Add idea</button>
       </div>
 
       {error && <p className="ideas-error ideas-banner" role="alert">{error}</p>}
-      {notice && <p className="ideas-notice ideas-banner" role="status">{notice}</p>}
 
       <div className="ideas-sheet-wrap" role="region" aria-label="Editable blog post ideas spreadsheet" tabIndex={0}>
         <table className="ideas-sheet">
@@ -238,13 +318,11 @@ export default function BlogPostIdeasClient() {
             <th scope="col">SME Contact Info</th>
             <th scope="col" className="questions-column">Questions to Ask</th>
             <th scope="col">Status</th>
-            <th scope="col">Topic / Keyword</th>
-            <th scope="col">Target Publish Date</th>
             <th scope="col" className="actions-column"><span className="sr-only">Row actions</span></th>
           </tr></thead>
           <tbody>
             {visibleRows.map((row) => {
-              const busy = savingId === row.id;
+              const busy = savingIds.has(row.id);
               const dirty = rowIsDirty(row);
               return <tr key={row.id} className={row.isNew ? "ideas-new-row" : undefined}>
                 <td><input aria-label={`Idea${row.idea ? `: ${row.idea}` : ""}`} className="ideas-cell-input idea-input" value={row.idea} maxLength={500} placeholder="A clear, specific idea" onChange={(event) => updateRow(row.id, "idea", event.target.value)} /></td>
@@ -253,22 +331,20 @@ export default function BlogPostIdeasClient() {
                 <td><input aria-label={`SME Contact Info for ${row.idea || "new idea"}`} className="ideas-cell-input" value={row.smeContactInfo} maxLength={500} placeholder="Email or contact" onChange={(event) => updateRow(row.id, "smeContactInfo", event.target.value)} /></td>
                 <td><textarea aria-label={`Questions to Ask for ${row.idea || "new idea"}`} className="ideas-cell-input ideas-cell-textarea" value={row.questionsToAsk} maxLength={2_000} placeholder="What should we ask?" rows={2} onChange={(event) => updateRow(row.id, "questionsToAsk", event.target.value)} /></td>
                 <td><select aria-label={`Status for ${row.idea || "new idea"}`} className="ideas-cell-input status-input" value={row.status} onChange={(event) => updateRow(row.id, "status", event.target.value)}>{STATUSES.map((status) => <option key={status} value={status}>{status}</option>)}</select></td>
-                <td><input aria-label={`Topic or keyword for ${row.idea || "new idea"}`} className="ideas-cell-input" value={row.topicKeyword} maxLength={300} placeholder="Optional" onChange={(event) => updateRow(row.id, "topicKeyword", event.target.value)} /></td>
-                <td><input aria-label={`Target Publish Date for ${row.idea || "new idea"}`} className="ideas-cell-input date-input" type="date" value={row.targetPublishDate} onChange={(event) => updateRow(row.id, "targetPublishDate", event.target.value)} /></td>
                 <td className="ideas-row-actions">
-                  {dirty && <button type="button" className="ideas-save-button" onClick={() => void saveRow(row)} disabled={busy || !row.idea.trim()}>{busy ? "Saving…" : "Save"}</button>}
-                  {dirty && <button type="button" className="ideas-text-button" onClick={() => cancelRow(row)} disabled={busy}>Cancel</button>}
-                  {!dirty && !row.isNew && <button type="button" className="ideas-delete-button" onClick={() => void deleteRow(row)} disabled={busy}>{busy ? "Working…" : "Delete"}</button>}
-                  {row.isNew && <button type="button" className="ideas-delete-button" onClick={() => void deleteRow(row)} disabled={busy}>Remove</button>}
+                  {busy && <span className="ideas-row-state">Saving…</span>}
+                  {!busy && dirty && <span className="ideas-row-state">{row.idea.trim() ? "Auto-saves in 5 seconds" : "Add an idea to save"}</span>}
+                  <button type="button" className="ideas-delete-button" onClick={() => void deleteRow(row)} disabled={busy}>{row.isNew ? "Remove" : "Delete"}</button>
                 </td>
               </tr>;
             })}
-            {!loadingRows && visibleRows.length === 0 && <tr><td colSpan={9} className="ideas-empty">{filter ? "No ideas match that filter." : "No ideas yet. Add the first one to start the list."}</td></tr>}
-            {loadingRows && <tr><td colSpan={9} className="ideas-empty">Refreshing shared ideas…</td></tr>}
+            {!loadingRows && visibleRows.length === 0 && <tr><td colSpan={7} className="ideas-empty">{filter ? "No ideas match that filter." : "No ideas yet. Add the first one to start the list."}</td></tr>}
+            {loadingRows && <tr><td colSpan={7} className="ideas-empty">Loading shared ideas…</td></tr>}
           </tbody>
         </table>
       </div>
-      <footer className="ideas-footer"><span>{rows.length} {rows.length === 1 ? "idea" : "ideas"}</span><span>Each row saves directly to the shared Notion database.</span></footer>
+      <footer className="ideas-footer"><span>{rows.length} {rows.length === 1 ? "idea" : "ideas"}</span><span>Changes save directly to Notion after 5 seconds without typing.</span></footer>
     </section>
+    {toast && <div className="ideas-saved-toast" role="status" aria-live="polite" aria-atomic="true"><span aria-hidden="true">✓</span>{toast}</div>}
   </main>;
 }

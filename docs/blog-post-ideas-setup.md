@@ -2,6 +2,8 @@
 
 The `/blog-post-ideas` page is a shared spreadsheet backed by the Blog Post Ideas Notion database. It uses a server-side Conduit bridge, so the Notion token stays in Conduit's encrypted connection store.
 
+The spreadsheet shows Idea, SME, Idea Creator, SME Contact Info, Questions to Ask, and Status. Edits save to Notion after five seconds without typing; new rows need a non-empty Idea before they can save. The page does not show or write Topic / Keyword or Target Publish Date, leaving those existing Notion properties and values untouched.
+
 ## Required deployment values
 
 Set these values in the Authors Collective website deployment:
@@ -12,7 +14,7 @@ Set these values in the Authors Collective website deployment:
 
 Set the same `BLOG_IDEAS_ACCESS_PASSWORD` and `BLOG_IDEAS_SESSION_SECRET` in Conduit. Use a shared phrase for the password and generate the session secret with `openssl rand -base64 32`; store values in the deployment secret stores and do not commit or paste them into chat. The website fails closed until all three values are configured.
 
-Conduit also requires its existing `CONDUIT_MCP_TENANT_ID`, `CONNECTION_SECRET_ENCRYPTION_KEY`, and an active `Notion · Authors Collective` connection. The Notion integration needs access to the Blog Post Ideas database; if its credential has a `dataSourceIds` allowlist, add the public data-source ID. The bridge checks this and scopes all row mutations to the one database.
+Conduit also requires `BLOG_IDEAS_NOTION_TENANT_ID` set to the tenant that owns its active `Notion · Authors Collective` connection, plus its existing `CONNECTION_SECRET_ENCRYPTION_KEY`. The Notion integration needs access to the Blog Post Ideas database; if its credential has a `dataSourceIds` allowlist, add the public data-source ID. The bridge checks this and scopes all row mutations to the one database.
 
 ## Identity and access
 
