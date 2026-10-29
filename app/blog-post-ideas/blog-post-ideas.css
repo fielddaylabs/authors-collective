@@ -10,10 +10,7 @@
 .ideas-eyebrow { margin: 0 0 .6rem; color: #c81414; font-family: var(--font-josefin); font-size: .76rem; font-weight: 700; letter-spacing: .18em; }
 .ideas-heading-row h1, .ideas-login-card h1 { margin: 0; font-family: var(--font-girassol); font-size: clamp(2.7rem, 6vw, 4.8rem); font-weight: 400; line-height: .98; }
 .ideas-intro { max-width: 650px; margin: .85rem 0 0; color: #615f57; font-size: 1rem; line-height: 1.6; }
-.ideas-notion-link { flex: none; color: #1d1b17; font-size: .9rem; text-decoration-color: #d41616; text-decoration-thickness: 2px; text-underline-offset: 4px; }
 .ideas-toolbar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
-.ideas-toolbar-note { display: flex; align-items: center; gap: .55rem; margin-right: auto; color: #626057; font-size: .85rem; }
-.ideas-live-dot { width: 8px; height: 8px; border-radius: 50%; background: #328253; box-shadow: 0 0 0 3px rgb(50 130 83 / .12); }
 .ideas-search input { width: min(280px, 35vw); min-height: 42px; border: 1px solid rgb(0 0 0 / .2); border-radius: 3px; background: #fffdf7; padding: .6rem .8rem; color: #111; }
 .ideas-primary-button { display: inline-flex; min-height: 42px; align-items: center; justify-content: center; border: 1px solid #c81313; border-radius: 3px; background: #d91616; padding: .6rem .95rem; color: #fff; cursor: pointer; font: 600 .9rem var(--font-dm-sans); transition: background-color 120ms ease, transform 120ms ease; }
 .ideas-primary-button:hover { background: #b90e0e; }
@@ -62,7 +59,7 @@
 @media (max-width: 720px) {
   .ideas-topbar { height: 66px; padding-inline: 1rem; }.ideas-brand { font-size: .76rem; gap: .5rem; }.ideas-mark { width: 32px; height: 32px; }
   .ideas-user { gap: .7rem; font-size: .75rem; }.ideas-heading-row { align-items: flex-start; flex-direction: column; gap: 1rem; }.ideas-heading-row h1 { font-size: 3.2rem; }
-  .ideas-toolbar { align-items: stretch; flex-wrap: wrap; }.ideas-toolbar-note { width: 100%; }.ideas-search { flex: 1; }.ideas-search input { width: 100%; }.ideas-add-button { flex: none; }
+  .ideas-toolbar { align-items: stretch; flex-wrap: wrap; }.ideas-search { flex: 1; }.ideas-search input { width: 100%; }.ideas-add-button { flex: none; }
   .ideas-footer { flex-direction: column; }.ideas-sheet { min-width: 1100px; }
 }
 @media (prefers-reduced-motion: reduce) { .ideas-saved-toast { animation: none; } }

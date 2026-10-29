@@ -16,7 +16,6 @@ type Row = {
 
 type Session = { name: string };
 const STATUSES = ["New", "Exploring", "Ready", "In Progress", "Published"];
-const NOTION_URL = "https://app.notion.com/p/03397c6f541b4ca69471b93bb963573f";
 
 async function jsonRequest(url: string, init?: RequestInit): Promise<{ response: Response; body: Record<string, unknown> }> {
   const response = await fetch(url, { cache: "no-store", ...init });
@@ -211,7 +210,7 @@ export default function BlogPostIdeasClient() {
         : [saved, ...savedRowsRef.current];
       savedRowsRef.current = nextSavedRows;
       savedSuccessfully = true;
-      showSavedToast();
+      showSavedToast(wasNew ? "Idea added" : "Changes saved");
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Could not save this row.");
     } finally {
@@ -289,7 +288,6 @@ export default function BlogPostIdeasClient() {
         {error && <p className="ideas-error" role="alert">{error}</p>}
         <button className="ideas-primary-button" type="submit">Open spreadsheet</button>
       </form>
-      <p className="ideas-login-footnote">Your name is saved with ideas you create. The team can edit every row.</p>
     </section>
   </main>;
 
@@ -301,15 +299,11 @@ export default function BlogPostIdeasClient() {
     <section className="ideas-content">
       <div className="ideas-heading-row">
         <div>
-          <p className="ideas-eyebrow">CONTENT PLANNING</p>
           <h1>Blog Post Ideas</h1>
-          <p className="ideas-intro">Collect ideas, find the right subject matter expert, and plan the next conversation.</p>
         </div>
-        <a className="ideas-notion-link" href={NOTION_URL} target="_blank" rel="noreferrer">Open in Notion <span aria-hidden="true">↗</span></a>
       </div>
 
       <div className="ideas-toolbar">
-        <div className="ideas-toolbar-note"><span className="ideas-live-dot" aria-hidden="true" />Changes save after 5 seconds of inactivity</div>
         <label className="ideas-search"><span className="sr-only">Filter ideas</span><input value={filter} onChange={(event) => setFilter(event.target.value)} placeholder="Find an idea or SME" /></label>
         <button type="button" className="ideas-primary-button ideas-add-button" onClick={() => { setError(""); setToast(""); const nextRows = [blankRow(session.name), ...rowsRef.current]; rowsRef.current = nextRows; setRows(nextRows); }}>＋ Add idea</button>
       </div>
@@ -350,7 +344,7 @@ export default function BlogPostIdeasClient() {
           </tbody>
         </table>
       </div>
-      <footer className="ideas-footer"><span>{rows.length} {rows.length === 1 ? "idea" : "ideas"}</span><span>Changes save directly to Notion after 5 seconds without typing.</span></footer>
+      <footer className="ideas-footer"><span>{rows.length} {rows.length === 1 ? "idea" : "ideas"}</span><span>Each row saves directly to Jaden&apos;s Notion workspace.</span></footer>
     </section>
     {toast && <div className="ideas-saved-toast" role="status" aria-live="polite" aria-atomic="true"><span aria-hidden="true">✓</span>{toast}</div>}
   </main>;
