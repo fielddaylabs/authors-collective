@@ -7,7 +7,7 @@ export type BlogIdeasSession = { name: string; expiresAt: number; token: string 
 
 function accessPassword(): string | undefined {
   const value = process.env.BLOG_IDEAS_ACCESS_PASSWORD;
-  return value && value.length >= 32 ? value : undefined;
+  return value && value.length >= 12 ? value : undefined;
 }
 
 function sessionSecret(): string | undefined {
