@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Authors Collective applet preview</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f5f7f6; color: #202323; font: 16px/1.5 system-ui, sans-serif; }
+    header { max-width: 1180px; margin: 0 auto; padding: 24px 20px 8px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { color: #5c6863; }
+    section { max-width: 1180px; margin: 18px auto; padding: 0 16px; }
+    section h2 { margin: 22px 4px 10px; font-size: 18px; }
+    [data-ac-applet] { min-height: 48px; }
+    .fallback { padding: 12px; border: 1px solid #dce1df; border-radius: 10px; background: white; color: #59645f; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Applet preview</h1>
+    <p>Local integration preview for the three standalone scripts. Vector scores are clearly labeled placeholders in the applet and are ready to replace with exported values.</p>
+  </header>
+  <section>
+    <h2>When similarity isn’t enough</h2>
+    <div data-ac-applet="vector-search-revisited"><p class="fallback">Interactive retrieval comparison loading. It uses bundled offline fixture data.</p></div>
+  </section>
+  <section>
+    <h2>Watch search learn from shoppers</h2>
+    <div data-ac-applet="adaptive-intent"><p class="fallback">Interactive synthetic centroid example loading.</p></div>
+  </section>
+  <section>
+    <h2>Would you ship this change?</h2>
+    <div data-ac-applet="would-you-ship"><p class="fallback">Interactive fictional evaluation example loading.</p></div>
+  </section>
+  <script defer src="./vector-search-revisited.js"></script>
+  <script defer src="./adaptive-intent.js"></script>
+  <script defer src="./would-you-ship.js"></script>
+</body>
+</html>

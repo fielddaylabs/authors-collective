@@ -1,0 +1,105 @@
+/**
+ * SPEC: Watch search learn from shoppers. Interactive implementation follows.
+ * Full fixture/spec: https://app.notion.com/p/416a1fe6155281ed9f78c792e521b2b3
+ * Placement: in Watch it work, after setup and before query explanations.
+ *
+ * BUILD: A synthetic 2D weighted-centroid explorer: query chips (hydro, camp mug,
+ * bottle, gifts, flask lid), SVG product plot, original query/centroid markers,
+ * side-by-side top-five rankings, evidence totals, and fallback status.
+ * Default hydro. Use the full spec's exact 14-product coordinates and query/event
+ * fixture: four drinkware, three skincare, three gardening, four camp-kitchen items.
+ * Plot fixed 0-10 bounds with group colors AND shapes; supply text equivalents.
+ *
+ * INTERACTION: Expand evidence editor with per-product integer clicks/conversions
+ * (0-100), +/- buttons and numeric inputs. Preserve edits per query. Clicks-only
+ * versus clicks+conversions switch sets conversion multiplier to 0 or 10.
+ * Edits remain pending until Recompute illustrative batch is pressed: represent
+ * a later batch, not live learning. Reset example resets selected query; Reset all
+ * restores defaults. Invalid counts show inline errors and retain valid state.
+ *
+ * MATH: weight=clicks+multiplier*conversions; centroid=sum(weight*point)/sum(weight).
+ * Toy eligibility: >=60 points across >=3 positively weighted records, explicitly
+ * labeled illustrative and unverified as an Algolia threshold. Rank by Euclidean
+ * distance then ID, not cosine (arbitrary toy coordinates). Baseline uses original
+ * text point; eligible variant uses centroid; otherwise results equal baseline.
+ * Zero weight means no centroid. Ineligible candidate centroid may be dashed and
+ * labeled not used. Show distance, rank movement, and eligibility arithmetic.
+ *
+ * LESSONS: hydro learns bottle intent; camp mug shows conversion weighting;
+ * bottle already works; gifts averages scattered interests; flask lid falls back.
+ * For gifts explicitly assume a bottle-gift shopper and mark other categories
+ * against that assumed task, not against a universal definition of gifts.
+ * Replace canned conclusions with factual summaries when edits change outcomes.
+ * Label synthetic vectors/events, omitted lexical retrieval, and toy geometry.
+ * Evidence controls are a teaching device, not production bag-editing controls.
+ * Never claim product performance, universal improvement, or production eligibility.
+ *
+ * EMBED: Serve authorscollective.org/applets/v1/adaptive-intent.js as a self-contained
+ * classic script. After DOM readiness mount [data-ac-applet="adaptive-intent"],
+ * or insert after explicit script data-target anchor. Never guess heading text.
+ * Bounded 15-second observer handles late mounts; disconnect after success/timeout.
+ * Idempotent across repeated scripts; multiple mounts have independent state.
+ * Bundle fixtures/styles; Shadow DOM isolation; no external assets, APIs, tracking,
+ * cookies/storage, or host CSS changes. Keep static fallback until initialized.
+ * Warn once if target missing. Support 320px, keyboard, labels, visible focus,
+ * reduced motion, textual plot summaries, and non-color status. Preserve focus.
+ * Permanent caption: Interactive demo by Authors Collective and Field Day Labs.
+ * Link names to https://authorscollective.org and https://fieldday.dev.
+ *
+ * DONE: Deliver source, fixture docs, preview, build/embed README and bundle.
+ * Verify centroid arithmetic, zero events, 59/60 points, two/three records,
+ * multiplier, pending/applied state, resets, preserved query state, deterministic
+ * ranks, fallback equality, mobile/keyboard, and duplicate/delayed/two-instance mounts.
+ */
+/*
+ * FIXTURE EDITING NOTES
+ * The editable toy catalog and its coordinates are the `products` array near
+ * the top of this file: [stable id, display name, group, x, y]. Query text points,
+ * starting click/conversion counts, and takeaways are in `definitions`. To change
+ * a query's starter event data, edit that query's `events` object; event pairs are
+ * [clicks, conversions], keyed by product ID. Unlisted products are zero. The
+ * counts the reader changes are page-local and never stored. The centroid uses
+ * the configured clicks/conversions multiplier; the UI ranks all 14 fixture
+ * coordinates by Euclidean distance. These are intentionally synthetic teaching
+ * coordinates, not imported production embeddings or measured retrieval results.
+ * No model is downloaded or run in the browser. Update IDs consistently across
+ * `products`, `events`, and any text referring to a product group.
+ */
+(function () {
+  "use strict";
+  var KEY = "ac-applet-adaptive-intent-v1";
+  var products = [
+    ["b1","Hydro Trail Bottle","Drinkware",8,1],["b2","Hydro Everyday Bottle","Drinkware",9,1],["b3","Hydro Sport Bottle","Drinkware",8,2],["b4","Insulated Travel Bottle","Drinkware",9,2],
+    ["s1","Hydrating Face Cream","Skincare",1,8],["s2","Hydro Gel Serum","Skincare",2,8],["s3","Moisture Recovery Lotion","Skincare",1,9],
+    ["g1","Hydroponic Starter Kit","Gardening",8,8],["g2","Indoor Grow Tray","Gardening",9,8],["g3","Nutrient Pump","Gardening",8,9],
+    ["m1","Budget Camp Mug","Camp kitchen",1,1],["m2","Premium Insulated Camp Mug","Camp kitchen",2,1],["m3","Lightweight Camp Cup","Camp kitchen",1,2],["m4","Compact Camp Pot","Camp kitchen",2,2]
+  ].map(function (p) { return {id:p[0],name:p[1],group:p[2],x:p[3],y:p[4]}; });
+  var definitions = [
+    {id:"hydro",label:"hydro",point:[3,8],events:{b1:[20,2],b2:[10,1],b3:[10,0]},lesson:"Site-specific bottle intent"},
+    {id:"camp",label:"camp mug",point:[1,1.5],events:{m1:[35,0],m2:[0,5],m3:[5,0]},lesson:"Conversion weighting shifts the center"},
+    {id:"bottle",label:"bottle",point:[8.4,1.4],events:{b1:[20,1],b2:[20,1],b3:[10,0]},lesson:"The text point already sits near bottle results"},
+    {id:"gifts",label:"gifts",point:[8.4,1.4],events:{b1:[20,0],s1:[20,0],g1:[20,0]},lesson:"Mixed audience events pull the centroid between product groups"},
+    {id:"flask",label:"flask lid",point:[8,1],events:{b1:[2,0],b2:[1,0]},lesson:"Sparse evidence falls back to the text point"}
+  ];
+  var style = " :host{all:initial;display:block;color:#202323;font:14px/1.45 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}*{box-sizing:border-box}button,input{font:inherit}button{cursor:pointer}.app{max-width:1100px;margin:auto;padding:22px;border:1px solid #dce1df;border-radius:18px;background:#fff;box-shadow:0 10px 34px #15302b0b}.top{display:flex;justify-content:space-between;gap:16px;align-items:start}.eyebrow,.muted{color:#687472}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.09em;font-weight:700}.top h2{margin:4px 0;font-size:clamp(21px,3vw,30px);letter-spacing:-.03em}.caveat{font-size:12px;color:#56615e;max-width:390px}.queries,.switches{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.chip,.tab,.action{border:1px solid #cad4d0;background:#fff;color:#25312e;border-radius:999px;padding:8px 12px}.chip[aria-pressed=true],.tab[aria-pressed=true],.action.primary{background:#173f36;color:white;border-color:#173f36}.layout{display:grid;grid-template-columns:minmax(260px,.95fr) minmax(320px,1.2fr);gap:16px}.panel{border:1px solid #e0e6e3;border-radius:14px;padding:14px;min-width:0}.panel h3{margin:0 0 10px;font-size:15px}.plot{width:100%;height:auto;display:block;background:linear-gradient(#f4f7f5 1px,transparent 1px),linear-gradient(90deg,#f4f7f5 1px,transparent 1px);background-size:10% 10%;border:1px solid #e8eeeb;border-radius:10px}.rankings{display:grid;grid-template-columns:1fr 1fr;gap:12px}.list{margin:0;padding:0;list-style:none}.item{display:grid;grid-template-columns:24px 1fr auto;gap:7px;padding:8px 0;border-bottom:1px solid #edf0ee}.item:last-child{border:0}.rank{color:#687472;font-variant-numeric:tabular-nums}.score{color:#58635f;font-size:12px;white-space:nowrap}.status{margin:12px 0;padding:10px 12px;background:#f3f7f4;border-radius:9px}.editor{margin-top:16px}.editor summary,.about summary{cursor:pointer;font-weight:700}.product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}.counter{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid #e4e9e6;border-radius:9px;padding:8px}.counter-name{font-size:12px;font-weight:650}.counter-fields{display:flex;gap:4px;align-items:center}.counter label{font-size:10px;color:#69736f}.counter input{width:48px;padding:4px;border:1px solid #cdd6d2;border-radius:6px}.inline-error{color:#a32121;min-height:1.3em}.caption{margin:14px 0 0;text-align:right;font-size:12px;color:#6b7472}.caption a{color:#235c50}.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.controls label{display:flex;gap:6px;align-items:center}.focus:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #df922d;outline-offset:2px}.small{font-size:12px;color:#5b6662}.takeaway{font-weight:650;margin:8px 0}.point-summary{font-size:12px;color:#47534f}.batch{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}.pending{color:#8b4b13;font-size:12px;font-weight:700}@media(max-width:760px){.app{padding:14px}.top{display:block}.caveat{max-width:none}.layout{grid-template-columns:1fr}.rankings{grid-template-columns:1fr}.product-grid{grid-template-columns:1fr}.caption{text-align:left}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}";
+  function esc(s){return String(s).replace(/[&<>\"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+  function mount(host){if(host.dataset.acMounted===KEY)return;host.dataset.acMounted=KEY;var shadow=host.shadowRoot||host.attachShadow({mode:"open"});var states=definitions.map(function(d){var e={};products.forEach(function(p){e[p.id]=(d.events[p.id]||[0,0]).slice();});return {draft:e,applied:JSON.parse(JSON.stringify(e)),draftMode:10,mode:10};});var active=0;
+    function weightMap(state,mult){var out={},total=0,count=0,cx=0,cy=0;products.forEach(function(p){var e=state[p.id]||[0,0],w=e[0]+mult*e[1];out[p.id]=w;total+=w;if(w>0){count++;cx+=w*p.x;cy+=w*p.y;}});return {weights:out,total:total,count:count,point:total? [cx/total,cy/total]:null};}
+    function distance(a,p){return Math.hypot(a[0]-p.x,a[1]-p.y);}
+    function rank(point){return products.slice().sort(function(a,b){return distance(point,a)-distance(point,b)||a.id.localeCompare(b.id);}).slice(0,5);}
+    function saveDraft(id,kind,value){var n=Number(value);var err=shadow.querySelector("#err");if(!Number.isInteger(n)||n<0||n>100){err.textContent="Enter a whole number from 0 to 100.";return;}states[active].draft[id][kind]=n;err.textContent="";render();}
+    function render(){var d=definitions[active],s=states[active],stats=weightMap(s.applied,s.mode),eligible=stats.total>=60&&stats.count>=3,used=eligible?stats.point:d.point,pending=JSON.stringify(s.draft)!==JSON.stringify(s.applied)||s.draftMode!==s.mode;var baseline=rank(d.point),adaptive=rank(used);var desc=d.id==="gifts"?"Assumed task: choose a bottle gift (b1–b4). “Gifts” alone does not identify that intent.":"";
+      var chips=definitions.map(function(x,i){return '<button class="chip" data-query="'+i+'" aria-pressed="'+(i===active)+'">'+esc(x.label)+'</button>';}).join("");
+      function list(items,base,point){return '<ol class="list">'+items.map(function(p,i){var old=base.findIndex(function(x){return x.id===p.id;});var move=old<0?"new":old===i?"same":old>i?"↑"+(old-i):"↓"+(i-old);return '<li class="item"><span class="rank">'+(i+1)+'.</span><span>'+esc(p.name)+'<br><span class="small">'+esc(p.group)+' · '+move+(d.id==="gifts"&&!/^b/.test(p.id)?' · outside assumed task':'')+'</span></span><span class="score">'+distance(point,p).toFixed(2)+'</span></li>';}).join("")+'</ol>';}
+      var counters=products.map(function(p){var e=s.draft[p.id];return '<div class="counter"><span class="counter-name">'+esc(p.name)+'</span><div class="counter-fields"><label>Clicks <input type="number" min="0" max="100" step="1" data-id="'+p.id+'" data-kind="0" value="'+e[0]+'" aria-label="'+esc(p.name)+' clicks"></label><label>Conv. <input type="number" min="0" max="100" step="1" data-id="'+p.id+'" data-kind="1" value="'+e[1]+'" aria-label="'+esc(p.name)+' conversions"></label></div></div>';}).join("");
+      var circles=products.map(function(p){var shape=p.group==="Drinkware"?'<circle cx="0" cy="0" r="4" fill="#227b66"/>':p.group==="Skincare"?'<rect x="-4" y="-4" width="8" height="8" fill="#b15b8b"/>':p.group==="Gardening"?'<path d="M0 -5 L5 4 L-5 4 Z" fill="#d1872b"/>':'<path d="M-5 0 L0 -5 L5 0 L0 5 Z" fill="#5475a3"/>';return '<g transform="translate('+(35+p.x*28)+','+(15+(10-p.y)*24)+')">'+shape+'</g>';}).join("");
+      var cent=stats.point?'<line x1="'+(35+d.point[0]*28)+'" y1="'+(15+(10-d.point[1])*24)+'" x2="'+(35+stats.point[0]*28)+'" y2="'+(15+(10-stats.point[1])*24)+'" stroke="#263b35" stroke-dasharray="4 3"/><circle cx="'+(35+stats.point[0]*28)+'" cy="'+(15+(10-stats.point[1])*24)+'" r="5" fill="white" stroke="#173f36" stroke-width="2"/>':'';
+      shadow.innerHTML='<style>'+style+'</style><main class="app"><div class="top"><div><div class="eyebrow">Synthetic, two-dimensional toy</div><h2>Watch search learn from shoppers</h2><div class="small">Change evidence, then inspect a later illustrative batch.</div></div><div class="caveat">Synthetic vectors and events. This toy does not represent Algolia production ranking, eligibility, or performance.</div></div><nav class="queries" aria-label="Preset queries">'+chips+'</nav><div class="layout"><section class="panel"><h3>Product map · illustrative 2D distance</h3><svg class="plot" viewBox="0 0 350 270" role="img" aria-label="Fixed two-dimensional plot. Circles are drinkware, squares skincare, triangles gardening, diamonds camp kitchen."><line x1="35" y1="255" x2="315" y2="255" stroke="#9ca8a3"/><line x1="35" y1="15" x2="35" y2="255" stroke="#9ca8a3"/>'+circles+'<circle cx="'+(35+d.point[0]*28)+'" cy="'+(15+(10-d.point[1])*24)+'" r="6" fill="#173f36"/><text x="'+(42+d.point[0]*28)+'" y="'+(15+(10-d.point[1])*24)+'" font-size="9">Text</text>'+cent+'</svg><p class="point-summary">Text point ('+d.point[0]+', '+d.point[1]+'). '+(stats.point?'Applied centroid ('+stats.point.map(function(n){return n.toFixed(2);}).join(', ')+').':'No weighted centroid.')+' '+desc+'</p><div class="small">● Drinkware　■ Skincare　▲ Gardening　◆ Camp kitchen</div><div class="status"><strong>'+stats.total+' points · '+stats.count+' records · '+(eligible?'Bag used':'Fallback')+'</strong><div class="small">Illustrative eligibility: 60 points across 3 records. This is not a verified Algolia threshold.</div></div></section><section class="panel"><div class="rankings"><div><h3>Text-only baseline</h3>'+list(baseline,baseline,d.point)+'</div><div><h3>Engagement-derived</h3>'+list(adaptive,baseline,used)+'</div></div><p class="takeaway">'+(pending?'Edits are pending; rankings still show the last applied batch.':eligible?esc(d.lesson):'Insufficient evidence: effective results use the text point.')+'</p></section></div><details class="editor"><summary>Change the evidence</summary><p class="small">Counts model upstream events. Changes apply only after recomputing a later batch.</p><div class="controls"><label><input type="radio" name="weight-mode" value="0" '+(s.draftMode===0?'checked':'')+'> Clicks only</label><label><input type="radio" name="weight-mode" value="10" '+(s.draftMode===10?'checked':'')+'> Clicks + conversions (×10)</label></div><p class="small">Clicks-only is a teaching comparison, not a production setting.</p><div class="product-grid">'+counters+'</div><div id="err" class="inline-error" role="alert"></div><div class="batch"><button class="action primary" data-action="apply">Recompute illustrative batch</button><button class="action" data-action="reset-query">Reset this example</button><button class="action" data-action="reset-all">Reset all</button><span class="pending" aria-live="polite">'+(pending?'Pending changes':'Applied state')+'</span></div></details><details class="about"><summary>About this example</summary><p class="small">Weight = clicks + multiplier × conversions. The weighted centroid is the coordinate-wise average of positively weighted records. Eligibility, geometry, and event counts are invented for this explanation; lexical retrieval is omitted. Distance is not relevance.</p></details><div class="caption">Interactive demo by <a href="https://authorscollective.org" target="_blank" rel="noopener">Authors Collective</a> and <a href="https://fieldday.dev" target="_blank" rel="noopener">Field Day Labs</a>.</div></main>';
+      shadow.querySelectorAll("[data-query]").forEach(function(b){b.addEventListener("click",function(){active=Number(b.dataset.query);render();});});shadow.querySelectorAll("[data-id]").forEach(function(input){input.addEventListener("change",function(){saveDraft(input.dataset.id,Number(input.dataset.kind),input.value);});});shadow.querySelectorAll("input[name=weight-mode]").forEach(function(input){input.addEventListener("change",function(){s.draftMode=Number(input.value);render();});});shadow.querySelector("[data-action=apply]").addEventListener("click",function(){s.applied=JSON.parse(JSON.stringify(s.draft));s.mode=s.draftMode;render();});shadow.querySelector("[data-action=reset-query]").addEventListener("click",function(){var fresh=definitions[active],e={};products.forEach(function(p){e[p.id]=(fresh.events[p.id]||[0,0]).slice();});states[active]={draft:JSON.parse(JSON.stringify(e)),applied:e,draftMode:10,mode:10};render();});shadow.querySelector("[data-action=reset-all]").addEventListener("click",function(){states=definitions.map(function(x){var e={};products.forEach(function(p){e[p.id]=(x.events[p.id]||[0,0]).slice();});return {draft:JSON.parse(JSON.stringify(e)),applied:e,draftMode:10,mode:10};});active=0;render();});
+    }
+    render();
+  }
+  var ownScript=document.currentScript;
+  function start(){var warned=false;function scan(){var nodes=[].slice.call(document.querySelectorAll('[data-ac-applet="adaptive-intent"]'));if(!nodes.length&&ownScript&&ownScript.dataset.target){var anchor=document.querySelector(ownScript.dataset.target);if(anchor){var n=document.createElement("div");n.setAttribute("data-ac-applet","adaptive-intent");anchor.parentNode.insertBefore(n,anchor.nextSibling);nodes=[n];}}nodes.forEach(mount);if(!nodes.length&&!warned){warned=true;console.warn("Adaptive Intent applet: add a [data-ac-applet=adaptive-intent] mount or script data-target selector.");}return nodes.length>0;}if(scan())return;if(!window.MutationObserver)return;var observer=new MutationObserver(function(){if(scan())observer.disconnect();});observer.observe(document.documentElement,{childList:true,subtree:true});window.setTimeout(function(){observer.disconnect();},15000);}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
+})();
