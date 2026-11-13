@@ -1,4 +1,3 @@
-/Users/jadenbaptista/.rvm/scripts/rvm:29: operation not permitted: ps
 /**
  * SPEC: When similarity isn't enough. The app below renders a replaceable,
  * precomputed fixture; its placeholder ranking numbers are not model results.
