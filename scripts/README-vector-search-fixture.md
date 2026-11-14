@@ -16,10 +16,11 @@ export OPENAI_API_KEY="..."
 node scripts/generate-vector-search-fixture.mjs
 ```
 
-By default, this uses `text-embedding-3-small` and writes:
+By default, this uses `text-embedding-3-small` and writes the vector artifact
+outside the public web root:
 
 ```text
-public/applets/v1/vector-search-embeddings.generated.json
+data/vector-search-embeddings.generated.json
 ```
 
 To choose another embeddings model, output path, or compatible endpoint:
@@ -42,7 +43,9 @@ dependency.
   and for each query's exact text.
 - Cosine similarity, with ties broken by ascending product ID.
 - A transparent BM25 baseline (`k1=1.2`, `b=0.75`; lowercase Unicode
-  letter/number tokens, no stemming).
+  letter/number tokens, common English stop words removed, no stemming). Terms
+  with zero BM25 score are excluded from lexical top-five results and receive no
+  BM25 contribution in reciprocal-rank fusion.
 - Equal-weight reciprocal-rank fusion of the BM25 and vector rankings (`k=60`).
 - Top-five results for every query, method, and requirements toggle state.
 
@@ -55,15 +58,16 @@ product facts in the applet source when either changes.
 
 The generated JSON is a build-time artifact, not a file the browser fetches.
 Review its `embedding`, `ranking`, `products`, `queries`, and `states` fields.
-Replace the corresponding placeholder result arrays in `EDITABLE_FIXTURE` in
-`vector-search-revisited.js` with `states[queryId].off/on.{keyword,vector,hybrid}`.
-Each generated row already uses the applet's `[productId, score, note]` shape.
-Then update the fixture version, corpus date, and provenance to name the model,
-model version, input-text recipe, and generation date. Keep the visible applet
-disclosure accurate and say the data is measured only after importing a
-generated fixture.
+Import `states[queryId].off/on.{keyword,vector,hybrid}` into the matching query
+in `EDITABLE_FIXTURE` in `vector-search-revisited.js`. Each generated row uses
+the applet's `[productId, score, note]` shape. Update fixture version, corpus
+date, and provenance with the model, dimensions, input-text recipe, and
+generation date. The applet bundles only ranked rows: the browser must not load
+the JSON, vectors, or call an embedding model. Its visible disclosure should
+identify the embedding model and explain that ranking was computed offline.
 
 Re-run the generator whenever product text, query text, product attributes, or
 the embedding model changes. Do not mix vectors from different models in one
 comparison. The generated vectors are useful for reproducing the rankings but
-are not needed by the applet after the result arrays have been imported.
+are not needed by the applet after the result arrays have been imported. Keep
+the artifact in `data/`, outside `public/`, so it is not served as a public asset.

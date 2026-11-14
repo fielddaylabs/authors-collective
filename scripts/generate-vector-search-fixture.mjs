@@ -6,14 +6,17 @@
  * The script sends product and query text to an OpenAI-compatible embeddings
  * endpoint during authoring. The browser applet never calls this endpoint.
  */
-import { readFile, writeFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
 import vm from "node:vm";
 
 const DEFAULT_SOURCE = "public/applets/v1/vector-search-revisited.js";
-const DEFAULT_OUTPUT = "public/applets/v1/vector-search-embeddings.generated.json";
+const DEFAULT_OUTPUT = "data/vector-search-embeddings.generated.json";
 const DEFAULT_MODEL = "text-embedding-3-small";
 const RRF_K = 60;
+const STOP_WORDS = new Set((
+  "a an and are as at be been being but by can could did do does doing down during each for from further had has have having he her here hers herself him himself his how i if in into is it its itself just me more most my myself no nor not of off on once only or other our ours ourselves out over own same she should so some such than that the their theirs them themselves then there these they this those through to too under until up very was we were what when where which while who whom why will with would you your yours yourself yourselves"
+).split(/\s+/));
 
 function arg(name, fallback) {
   const index = process.argv.indexOf(`--${name}`);
@@ -21,7 +24,8 @@ function arg(name, fallback) {
 }
 
 function tokenize(text) {
-  return String(text).toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [];
+  return (String(text).toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [])
+    .filter((token) => !STOP_WORDS.has(token));
 }
 
 function productText(product) {
@@ -134,12 +138,13 @@ function createStates(fixture, productVectors, queryVectors) {
       const candidateProducts = candidates.map(({ product }) => product);
       const keywordScores = bm25(candidateProducts.map(productText), tokenize(query.text));
       const vectorScores = candidates.map(({ index }) => cosine(queryVectors[queryIndex], productVectors[index]));
-      const keywordOrder = orderByScore(candidateProducts, keywordScores);
+      const keywordOrder = orderByScore(candidateProducts, keywordScores).filter(({ score }) => score > 0);
       const vectorOrder = orderByScore(candidateProducts, vectorScores);
       const keywordRanks = new Map(keywordOrder.map((item, index) => [item.product.id, index + 1]));
       const vectorRanks = new Map(vectorOrder.map((item, index) => [item.product.id, index + 1]));
       const hybridScores = candidateProducts.map((product) =>
-        1 / (RRF_K + keywordRanks.get(product.id)) + 1 / (RRF_K + vectorRanks.get(product.id)));
+        (keywordRanks.has(product.id) ? 1 / (RRF_K + keywordRanks.get(product.id)) : 0)
+        + 1 / (RRF_K + vectorRanks.get(product.id)));
       const hybridOrder = orderByScore(candidateProducts, hybridScores);
       const key = constrained ? "on" : "off";
       queryStates[key] = {
@@ -190,7 +195,7 @@ async function main() {
       inputTemplate: "name + brand + kind + desc + facts, joined with '. '",
     },
     ranking: {
-      bm25: { k1: 1.2, b: 0.75, tokenizer: "lowercase Unicode letters/numbers; no stemming" },
+      bm25: { k1: 1.2, b: 0.75, tokenizer: "lowercase Unicode letters/numbers; common English stop words removed; no stemming; zero-score documents excluded" },
       vector: "cosine similarity; descending",
       hybrid: { method: "equal-weight reciprocal-rank fusion", k: RRF_K },
       tieBreak: "product ID ascending",
@@ -209,6 +214,7 @@ async function main() {
     })),
     states: createStates(fixture, productVectors, queryVectors),
   };
+  await mkdir(dirname(outputPath), { recursive: true });
   await writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`, "utf8");
   console.log(`Wrote ${fixture.products.length} product vectors and ${fixture.queries.length} query vectors to ${outputPath}`);
   console.log("The generated states contain 24 precomputed result lists for manual import into the applet.");
