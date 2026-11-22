@@ -19,9 +19,16 @@ The generated fixture must load before the applet. It contains one fictional jac
 <figure>
   <div data-ac-applet="would-you-ship"><p>Interactive evaluation example loading.</p></div>
   <figcaption>
-    Interactive example by
-    <a href="https://authorscollective.org">Authors Collective</a>
-    and <a href="https://fieldday.dev">Field Day Labs</a>.
+    <small style="display:block;margin-top:12px;opacity:.6;font:12px/1.4 system-ui,sans-serif">
+      Interactive demo by
+      <a href="https://authorscollective.org/work/algolia-dynamic-index-routing/">
+        Authors Collective
+      </a>
+      — development by
+      <a href="https://www.fieldday.dev/work/algolia-dynamic-index-routing/">
+        Field Day Labs
+      </a>
+    </small>
   </figcaption>
 </figure>
 <script defer src="https://authorscollective.org/applets/v1/would-you-ship-fixture.js"></script>
