@@ -2,10 +2,28 @@
   "synthetic": true,
   "fixture": {
     "query": "I need a waterproof jacket under 400g. Which one should I buy?",
-    "productFacts": [
-      "Trail Shell: 240g, water-resistant; no published waterproof rating.",
-      "Storm Shell: 310g, waterproof to 10,000mm, with taped seams.",
-      "Alpine Parka: 950g, insulated and water-resistant; not waterproof-rated."
+    "products": [
+      {
+        "id": "trail-shell",
+        "name": "Trail Shell",
+        "price": "$89 (example price)",
+        "imageOffset": 150,
+        "description": "Lightweight shell, 240g. Water-resistant; no published waterproof rating."
+      },
+      {
+        "id": "storm-shell",
+        "name": "Storm Shell",
+        "price": "$129 (example price)",
+        "imageOffset": 0,
+        "description": "Rain shell, 310g. Waterproof to 10,000mm, with taped seams."
+      },
+      {
+        "id": "alpine-parka",
+        "name": "Alpine Parka",
+        "price": "$249 (example price)",
+        "imageOffset": -150,
+        "description": "Insulated parka, 950g. Water-resistant; not waterproof-rated."
+      }
     ],
     "metrics": [
       "Relevance",
@@ -15,11 +33,10 @@
     "configurations": [
       {
         "id": "baseline",
-        "name": "General-purpose prompt",
-        "summary": "Answers confidently without checking every product claim.",
+        "name": "Iteration 1: General-purpose prompt",
         "settings": [
-          "Prompt: Be helpful and recommend a product.",
-          "Product context: Catalog results are available, but no instruction requires checking each claim against them.",
+          "Starting point: The agent is asked to be helpful and recommend a product.",
+          "Catalog: It can retrieve the three jacket records, but has no instruction to verify each claim against them.",
           "Style: Friendly and concise."
         ],
         "answer": "Trail Shell is a great choice. It weighs 240g and is fully waterproof, so it is the lightest option for wet weather.",
@@ -37,12 +54,11 @@
       },
       {
         "id": "balanced",
-        "name": "Balanced improvement",
-        "summary": "A modest answer across all three categories.",
+        "name": "Iteration 2: Moving in the right direction",
         "settings": [
-          "Prompt: Answer the shopper’s question directly.",
-          "Product context: Use the catalog facts.",
-          "Style: Keep the answer neutral."
+          "Changed from iteration 1: Added an instruction to answer the shopper’s exact requirements.",
+          "Changed from iteration 1: Added an instruction to use the retrieved catalog facts.",
+          "Unchanged: Friendly, neutral style; the same three catalog records are available."
         ],
         "answer": "Storm Shell is waterproof and weighs 310g, so it fits your requirements.",
         "scores": {
@@ -59,12 +75,11 @@
       },
       {
         "id": "pushy",
-        "name": "Accurate, but pushy",
-        "summary": "The same total as the balanced setup, with a major weakness hidden inside it.",
+        "name": "Iteration 3: Two steps forward, one step back",
         "settings": [
-          "Prompt: Match the shopper’s requirements and use catalog facts.",
-          "Product context: Retrieve matching jacket records.",
-          "Style: Add persuasive urgency and encourage an immediate purchase."
+          "Changed from iteration 2: Kept the requirement-matching and catalog-grounding instructions.",
+          "Changed from iteration 2: Added a style instruction to create urgency and push for an immediate purchase.",
+          "Unchanged: The same three catalog records are available."
         ],
         "answer": "Storm Shell is waterproof and weighs 310g, so it fits your requirements. Buy now before it sells out!",
         "scores": {
@@ -81,34 +96,32 @@
       },
       {
         "id": "cautious",
-        "name": "Overly cautious",
-        "summary": "Avoids a false claim, but refuses when the catalog has a good match.",
+        "name": "Iteration 4: A cautious overcorrection",
         "settings": [
-          "Prompt: Never make a claim unless it is supported by a retrieved fact.",
-          "Product context: Use the catalog records.",
-          "Style: Prefer refusing when any detail is uncertain."
+          "Changed from iteration 3: Removed the instruction to create urgency.",
+          "Changed from iteration 3: Added a rule to refuse if any product detail seems uncertain, even when the catalog contains a suitable match.",
+          "Unchanged: The same three catalog records are available."
         ],
-        "answer": "I can’t recommend one. The catalog does not provide enough information to confirm a suitable waterproof jacket.",
+        "answer": "Storm Shell is waterproof to 10,000mm and weighs 310g, but I can’t recommend it because its record has no breathability rating.",
         "scores": {
           "Relevance": 42,
           "Faithfulness": 91,
           "Tone": 78
         },
         "reasons": {
-          "Relevance": "It does not recommend Storm Shell, which meets the weight and waterproof requirements.",
-          "Faithfulness": "It avoids inventing details, but overlooks facts that are present.",
+          "Relevance": "It refuses over a missing detail the shopper did not ask about.",
+          "Faithfulness": "Its product facts are right, but it treats an unasked-for detail as a reason to refuse.",
           "Tone": "The refusal is polite and easy to understand."
         },
         "overall": 70
       },
       {
         "id": "grounded",
-        "name": "Grounded and helpful",
-        "summary": "Uses the product facts and explains why the match fits.",
+        "name": "Iteration 5: A grounded, helpful winner",
         "settings": [
-          "Prompt: Check every product claim against the catalog and answer all stated requirements.",
-          "Product context: Retrieve the jacket records with weight and waterproof details.",
-          "Style: Be concise, neutral, and avoid unsupported urgency."
+          "Changed from iteration 4: Replaced the broad refusal rule with a check that each claim matches the catalog.",
+          "Changed from iteration 4: Told the agent to answer all requirements and explain why the selected product fits.",
+          "Unchanged: The same three catalog records are available; keep the tone concise and neutral."
         ],
         "answer": "Storm Shell fits: it weighs 310g and is waterproof to 10,000mm, with taped seams. Trail Shell is lighter, but its record says water-resistant, not waterproof.",
         "scores": {

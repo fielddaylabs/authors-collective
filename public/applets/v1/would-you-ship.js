@@ -35,6 +35,7 @@
     }
 
     var shadow = node.shadowRoot || node.attachShadow({ mode: "open" });
+    var productImageUrl = new URL("images/would-you-ship-jackets.jpg", ownScript.src).href;
     var styles = `
       :host{all:initial;display:block;color:#202323;font:15px/1.5 system-ui,-apple-system,sans-serif}
       *{box-sizing:border-box}
@@ -42,28 +43,28 @@
       h2{margin:0;font-size:clamp(23px,4vw,32px);line-height:1.2;letter-spacing:-.025em}
       h3{margin:0 0 10px;font-size:16px;line-height:1.3}
       p{margin:0}
-      .intro,.note{color:#596561}
-      .intro{margin-top:8px}
-      .badge{flex:none;border:1px solid #e8d6b5;background:#fff8ea;border-radius:20px;padding:5px 10px;color:#59471f;font-size:12px}
-      .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
-      .query{margin:22px 0;padding:15px 17px;border-left:4px solid #276356;background:#f3f7f5;border-radius:0 10px 10px 0}
-      .query strong{display:block;margin-bottom:4px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#53615c}
-      fieldset{padding:0;border:0;margin:0}
-      legend{margin-bottom:4px;font-size:18px;font-weight:700}
-      .note{font-size:13px}
-      .options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+      .top{display:block}
+      .options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:20px}
       .option{min-width:0;border:1px solid #dce3df;border-radius:12px;padding:12px;background:#fff;transition:border-color .15s,background .15s}
       .option.selected{border-color:#276356;background:#f5f9f7;box-shadow:0 0 0 1px #276356}
       .choice{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:start;gap:10px;cursor:pointer}
       .choice input{margin:4px 0 0;accent-color:#276356}
       .choice-name{font-weight:700}
-      .choice-summary{display:block;color:#596561;font-size:13px;margin-top:2px}
       .score{white-space:nowrap;text-align:right;font-size:13px;color:#53615c}
       .score b{display:block;color:#202323;font-size:20px;line-height:1.1}
       details{margin-top:9px}
       summary{cursor:pointer;color:#315c51;font-size:13px;font-weight:600}
       .settings{margin:8px 0 0;padding-left:19px;color:#46524e;font-size:13px}
       .settings li+li{margin-top:4px}
+      .products{margin-top:22px;padding:12px 0;border-top:1px solid #e7ebe9;border-bottom:1px solid #e7ebe9}
+      .product-note{margin:8px 0 0;color:#66716d;font-size:12px}
+      .product-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+      .product{overflow:hidden;border:1px solid #e0e6e3;border-radius:12px;background:#fff}
+      .product-image{height:150px;background-repeat:no-repeat;background-size:auto 100%;background-color:#f4f3f0}
+      .product-copy{padding:11px}
+      .product-name{font-weight:700}
+      .product-price{display:block;margin-top:2px;color:#53615c;font-size:13px}
+      .product-description{margin-top:7px;color:#46524e;font-size:13px}
       .conversation{margin-top:24px}
       .bubble{padding:13px 15px;border-radius:12px;max-width:94%}
       .speaker{display:block;margin-bottom:4px;color:#53615c;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
@@ -83,7 +84,7 @@
       .method p{margin-top:7px;color:#596561;font-size:13px}
       .caption{margin-top:18px;color:#68736f;font-size:12px;text-align:center}
       .caption a{color:inherit}
-      @media(max-width:620px){.top{display:block}.badge{display:inline-block;margin-top:10px}.options{grid-template-columns:1fr}.metric-grid{grid-template-columns:1fr}.metric{display:grid;grid-template-columns:1fr auto;align-items:start;gap:0 10px}.metric p{grid-column:1/-1}.metrics-heading{align-items:flex-start}.bubble{max-width:100%}}
+      @media(max-width:620px){.options{grid-template-columns:1fr}.product-grid{grid-template-columns:1fr}.metric-grid{grid-template-columns:1fr}.metric{display:grid;grid-template-columns:1fr auto;align-items:start;gap:0 10px}.metric p{grid-column:1/-1}.metrics-heading{align-items:flex-start}.bubble{max-width:100%}}
       @media(prefers-reduced-motion:reduce){.option{transition:none}}
       button,input{font:inherit}
       :focus-visible{outline:3px solid #297666;outline-offset:3px}
@@ -94,39 +95,37 @@
       return `<div class="option${selected ? " selected" : ""}" data-option="${escapeHtml(configuration.id)}">
         <label class="choice">
           <input type="radio" name="agent-configuration" value="${escapeHtml(configuration.id)}"${selected ? " checked" : ""}>
-          <span><span class="choice-name">${escapeHtml(configuration.name)}</span><span class="choice-summary">${escapeHtml(configuration.summary)}</span></span>
-          <span class="score">Total<b>${configuration.overall}/100</b></span>
+          <span class="choice-name">${escapeHtml(configuration.name)}</span>
+          <span class="score">Average score<b>${configuration.overall}/100</b></span>
         </label>
         <details><summary>Show configuration</summary><ul class="settings">${configuration.settings.map(function (setting) { return `<li>${escapeHtml(setting)}</li>`; }).join("")}</ul></details>
       </div>`;
     }).join("");
 
+    var products = fixture.products.map(function (product) {
+      return `<article class="product">
+        <div class="product-image" role="img" aria-label="Illustrative image of ${escapeHtml(product.name)} jacket" style="background-image:url(&quot;${escapeHtml(productImageUrl)}&quot;);background-position:calc(50% + ${Number(product.imageOffset)}px) center"></div>
+        <div class="product-copy"><div class="product-name">${escapeHtml(product.name)}</div><span class="product-price">${escapeHtml(product.price)}</span><p class="product-description">${escapeHtml(product.description)}</p></div>
+      </article>`;
+    }).join("");
+
     shadow.innerHTML = `<style>${styles}</style>
       <main class="app">
-        <header class="top">
-          <div><h2>One query. Five agent setups.</h2><p class="intro">Compare their answers and see where each one succeeds or fails.</p></div>
-          <span class="badge">Synthetic example</span>
-        </header>
-        <section class="query" aria-label="Test query"><strong>Shopper asks</strong><p>${escapeHtml(fixture.query)}</p></section>
-        <fieldset>
-          <legend>Choose an agent setup</legend>
-          <p class="note">Each total is the average of the three scores below, rounded to a whole number.</p>
-          <div class="options">${options}</div>
-        </fieldset>
+        <header class="top"><h2>Test these five iterations yourself</h2></header>
+        <div class="options" role="radiogroup" aria-label="Agent iterations">${options}</div>
+        <details class="products"><summary>What products can the agents retrieve?</summary>
+          <p class="product-note">Example catalog with illustrative product images and prices.</p>
+          <div class="product-grid">${products}</div>
+        </details>
         <section class="conversation" aria-labelledby="conversation-heading">
           <h3 id="conversation-heading">Sample conversation</h3>
-          <div class="bubble user"><span class="speaker">You</span>${escapeHtml(fixture.query)}</div>
+          <div class="bubble user"><span class="speaker">Shopper</span>${escapeHtml(fixture.query)}</div>
           <div class="bubble agent"><span class="speaker">Agent</span><p id="answer"></p></div>
         </section>
         <section class="metrics" aria-labelledby="metrics-heading">
           <div class="metrics-heading"><h3 id="metrics-heading">How this answer scored</h3><span class="total">Total <b id="total"></b>/100</span></div>
           <div class="metric-grid" id="metric-grid"></div>
         </section>
-        <details class="method"><summary>What do these scores mean?</summary>
-          <p>Relevance: did it answer the request? Faithfulness: did it stick to the catalog facts? Tone: was it clear and appropriate? Each category is scored from 0 to 100. The total is their simple average, so it can hide a weak category.</p>
-          <p>Product facts used: ${fixture.productFacts.map(escapeHtml).join(" ")}</p>
-          <p>All configurations, answers, and scores are fictional teaching examples. They are not measured Agent Studio results.</p>
-        </details>
         <div class="caption">Interactive demo by <a href="https://authorscollective.org" target="_blank" rel="noopener">Authors Collective</a> and <a href="https://fieldday.dev" target="_blank" rel="noopener">Field Day Labs</a>.</div>
       </main>`;
 
