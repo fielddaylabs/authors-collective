@@ -34,6 +34,7 @@
       return;
     }
 
+    var winnerHasBeenSelected = false;
     var shadow = node.shadowRoot || node.attachShadow({ mode: "open" });
     var productImageUrl = new URL("images/would-you-ship-jackets.jpg", ownScript.src).href;
     var styles = `
@@ -81,6 +82,11 @@
       .metric h3{margin:0}
       .metric-score{font-size:20px;font-weight:750;white-space:nowrap}
       .metric p{margin-top:7px;color:#596561;font-size:13px}
+      .winner{margin-top:22px;padding:16px;border:1px solid #cbdcd4;border-radius:12px;background:#f3f8f5}
+      .winner h3{margin:0 0 8px}
+      .winner p,.winner li{color:#46524e;font-size:14px}
+      .winner ul{margin:8px 0 0;padding-left:20px}
+      .winner li+li{margin-top:6px}
       .method{margin-top:16px;padding-top:12px;border-top:1px solid #e7ebe9}
       .method p{margin-top:7px;color:#596561;font-size:13px}
       .caption{margin-top:18px;color:#68736f;font-size:12px;text-align:center}
@@ -127,6 +133,16 @@
           <div class="metrics-heading"><h3 id="metrics-heading">How this answer scored</h3><span class="total">Total <b id="total"></b>/100</span></div>
           <div class="metric-grid" id="metric-grid"></div>
         </section>
+        <section class="winner" id="winner" hidden aria-live="polite" aria-labelledby="winner-heading">
+          <h3 id="winner-heading">Why iteration 5 wins</h3>
+          <p>This setup combines the useful changes and removes the ones that caused trouble.</p>
+          <ul>
+            <li><strong>Answer the full request:</strong> Check both the weight limit and the waterproof requirement, then explain why the recommendation fits.</li>
+            <li><strong>Use the catalog carefully:</strong> Check every product claim against the retrieved facts. Storm Shell qualifies at 310g and is rated waterproof to 10,000mm, with taped seams.</li>
+            <li><strong>Handle missing details sensibly:</strong> Don’t refuse because an unrelated detail, such as breathability, is missing. Mention missing information when it matters to the shopper’s question.</li>
+            <li><strong>Keep the tone helpful:</strong> Be concise and neutral. Don’t add pressure or unsupported urgency.</li>
+          </ul>
+        </section>
         <div class="caption">Interactive demo by <a href="https://authorscollective.org" target="_blank" rel="noopener">Authors Collective</a> and <a href="https://fieldday.dev" target="_blank" rel="noopener">Field Day Labs</a>.</div>
       </main>`;
 
@@ -144,7 +160,11 @@
     }
 
     shadow.querySelectorAll('input[name="agent-configuration"]').forEach(function (input) {
-      input.addEventListener("change", function () { showConfiguration(input.value); });
+      input.addEventListener("change", function () {
+        if (input.value === fixture.configurations[fixture.configurations.length - 1].id) winnerHasBeenSelected = true;
+        if (winnerHasBeenSelected) shadow.querySelector("#winner").hidden = false;
+        showConfiguration(input.value);
+      });
     });
     showConfiguration(fixture.configurations[0].id);
   }

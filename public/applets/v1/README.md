@@ -13,7 +13,7 @@ A script in `<head>` can instead set `data-target="#article-anchor"`; the select
 
 ## Would you ship this change?
 
-The generated fixture must load before the applet. It contains one fictional jacket query and five fictional agent iterations. Each option shows an average of Relevance, Faithfulness, and Tone. Iterations 2 and 3 both score 75 overall, while their category scores differ sharply. The collapsed product list includes illustrative catalog images and example prices from `images/would-you-ship-jackets.jpg`. The browser does not call a model or evaluator.
+The generated fixture must load before the applet. It contains one fictional jacket query and five fictional agent iterations. Each option shows an average of Relevance, Faithfulness, and Tone. Iterations 2 and 3 both score 75 overall, while their category scores differ sharply. The collapsed product list includes illustrative catalog images and example prices from `images/would-you-ship-jackets.jpg`. Selecting iteration 5 reveals a final summary of its complete configuration; it remains visible for the rest of that page load. The browser does not call a model or evaluator.
 
 ```html
 <div data-ac-applet="would-you-ship"><p>Interactive synthetic evaluation example loading.</p></div>
