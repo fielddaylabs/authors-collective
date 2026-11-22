@@ -6,23 +6,23 @@
       {
         "id": "trail-shell",
         "name": "Trail Shell",
-        "price": "$89 (example price)",
-        "imageOffset": 150,
+        "price": "$89",
+        "imagePosition": "0%",
         "description": "Lightweight shell, 240g. Water-resistant; no published waterproof rating."
       },
       {
         "id": "storm-shell",
         "name": "Storm Shell",
-        "price": "$129 (example price)",
-        "imageOffset": 0,
+        "price": "$129",
+        "imagePosition": "50%",
         "description": "Rain shell, 310g. Waterproof to 10,000mm, with taped seams."
       },
       {
         "id": "alpine-parka",
         "name": "Alpine Parka",
-        "price": "$249 (example price)",
-        "imageOffset": -150,
-        "description": "Insulated parka, 950g. Water-resistant; not waterproof-rated."
+        "price": "$249",
+        "imagePosition": "100%",
+        "description": "Insulated parka, 950g. Two zippered hand pockets."
       }
     ],
     "metrics": [

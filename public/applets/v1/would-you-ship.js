@@ -60,7 +60,8 @@
       .product-note{margin:8px 0 0;color:#66716d;font-size:12px}
       .product-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
       .product{overflow:hidden;border:1px solid #e0e6e3;border-radius:12px;background:#fff}
-      .product-image{height:150px;background-repeat:no-repeat;background-size:auto 100%;background-color:#f4f3f0}
+      .product-image{height:150px;display:flex;justify-content:center;background-color:#f4f3f0}
+      .product-crop{display:block;width:150px;height:150px;flex:none;background-repeat:no-repeat;background-size:300% 100%}
       .product-copy{padding:11px}
       .product-name{font-weight:700}
       .product-price{display:block;margin-top:2px;color:#53615c;font-size:13px}
@@ -104,7 +105,7 @@
 
     var products = fixture.products.map(function (product) {
       return `<article class="product">
-        <div class="product-image" role="img" aria-label="Illustrative image of ${escapeHtml(product.name)} jacket" style="background-image:url(&quot;${escapeHtml(productImageUrl)}&quot;);background-position:calc(50% + ${Number(product.imageOffset)}px) center"></div>
+        <div class="product-image" role="img" aria-label="Illustrative image of ${escapeHtml(product.name)} jacket"><span class="product-crop" style="background-image:url(&quot;${escapeHtml(productImageUrl)}&quot;);background-position:${escapeHtml(product.imagePosition)} center"></span></div>
         <div class="product-copy"><div class="product-name">${escapeHtml(product.name)}</div><span class="product-price">${escapeHtml(product.price)}</span><p class="product-description">${escapeHtml(product.description)}</p></div>
       </article>`;
     }).join("");
