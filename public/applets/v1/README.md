@@ -16,10 +16,19 @@ A script in `<head>` can instead set `data-target="#article-anchor"`; the select
 The generated fixture must load before the applet. It contains one fictional jacket query and five fictional agent iterations. Each option shows an average of Relevance, Faithfulness, and Tone. Iterations 2 and 3 both score 75 overall, while their category scores differ sharply. The collapsed product list includes illustrative catalog images and example prices from `images/would-you-ship-jackets.jpg`. Selecting iteration 5 reveals a final summary of its complete configuration; it remains visible for the rest of that page load. The browser does not call a model or evaluator.
 
 ```html
-<div data-ac-applet="would-you-ship"><p>Interactive synthetic evaluation example loading.</p></div>
+<figure>
+  <div data-ac-applet="would-you-ship"><p>Interactive evaluation example loading.</p></div>
+  <figcaption>
+    Interactive example by
+    <a href="https://authorscollective.org">Authors Collective</a>
+    and <a href="https://fieldday.dev">Field Day Labs</a>.
+  </figcaption>
+</figure>
 <script defer src="https://authorscollective.org/applets/v1/would-you-ship-fixture.js"></script>
 <script defer src="https://authorscollective.org/applets/v1/would-you-ship.js"></script>
 ```
+
+Keep the figure and attribution links in the article HTML; only the applet itself is rendered by JavaScript.
 
 Run `node scripts/generate-would-you-ship-fixture.mjs` after changing the query, catalog facts, configurations, answers, scores, or rationales; commit JSON and browser JS together. All values and answers are synthetic teaching examples, not Agent Studio measurements. The total is intentionally a simple average to illustrate how an aggregate can hide a weak category; it is not a production quality score.
 

@@ -89,8 +89,6 @@
       .winner li+li{margin-top:6px}
       .method{margin-top:16px;padding-top:12px;border-top:1px solid #e7ebe9}
       .method p{margin-top:7px;color:#596561;font-size:13px}
-      .caption{margin-top:18px;color:#68736f;font-size:12px;text-align:center}
-      .caption a{color:inherit}
       @media(max-width:620px){.options{grid-template-columns:1fr}.product-grid{grid-template-columns:1fr}.metric-grid{grid-template-columns:1fr}.metric{display:grid;grid-template-columns:1fr auto;align-items:start;gap:0 10px}.metric p{grid-column:1/-1}.metrics-heading{align-items:flex-start}.bubble{max-width:100%}}
       @media(prefers-reduced-motion:reduce){.option{transition:none}}
       button,input{font:inherit}
@@ -143,7 +141,6 @@
             <li><strong>Keep the tone helpful:</strong> Be concise and neutral. Don’t add pressure or unsupported urgency.</li>
           </ul>
         </section>
-        <div class="caption">Interactive demo by <a href="https://authorscollective.org" target="_blank" rel="noopener">Authors Collective</a> and <a href="https://fieldday.dev" target="_blank" rel="noopener">Field Day Labs</a>.</div>
       </main>`;
 
     function showConfiguration(id) {
