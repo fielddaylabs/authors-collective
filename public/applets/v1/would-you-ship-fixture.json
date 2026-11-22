@@ -1,0 +1,1055 @@
+{
+  "synthetic": true,
+  "seed": 42,
+  "resamples": 10000,
+  "scenarios": {
+    "Clear improvement": {
+      "caseCount": 30,
+      "Relevance": {
+        "baseline": 72,
+        "candidate": 90.8,
+        "change": 18.8,
+        "interval": [
+          11.9,
+          26.166666666666668
+        ]
+      },
+      "Faithfulness": {
+        "baseline": 49,
+        "candidate": 93.8,
+        "change": 44.8,
+        "interval": [
+          37.96666666666667,
+          51
+        ]
+      },
+      "Tone": {
+        "baseline": 75,
+        "candidate": 90.4,
+        "change": 15.4,
+        "interval": [
+          8.466666666666667,
+          22.333333333333332
+        ]
+      },
+      "cases": [
+        {
+          "id": "a1",
+          "template": "a",
+          "baseline": [
+            81,
+            41,
+            81
+          ],
+          "candidate": [
+            86,
+            88,
+            86
+          ]
+        },
+        {
+          "id": "a2",
+          "template": "a",
+          "baseline": [
+            83,
+            43,
+            83
+          ],
+          "candidate": [
+            88,
+            90,
+            88
+          ]
+        },
+        {
+          "id": "a3",
+          "template": "a",
+          "baseline": [
+            85,
+            45,
+            85
+          ],
+          "candidate": [
+            90,
+            92,
+            90
+          ]
+        },
+        {
+          "id": "a4",
+          "template": "a",
+          "baseline": [
+            85,
+            45,
+            85
+          ],
+          "candidate": [
+            90,
+            92,
+            90
+          ]
+        },
+        {
+          "id": "a5",
+          "template": "a",
+          "baseline": [
+            87,
+            47,
+            87
+          ],
+          "candidate": [
+            92,
+            94,
+            92
+          ]
+        },
+        {
+          "id": "a6",
+          "template": "a",
+          "baseline": [
+            89,
+            49,
+            89
+          ],
+          "candidate": [
+            94,
+            96,
+            94
+          ]
+        },
+        {
+          "id": "b1",
+          "template": "b",
+          "baseline": [
+            86,
+            36,
+            81
+          ],
+          "candidate": [
+            88,
+            90,
+            86
+          ]
+        },
+        {
+          "id": "b2",
+          "template": "b",
+          "baseline": [
+            88,
+            38,
+            83
+          ],
+          "candidate": [
+            90,
+            92,
+            88
+          ]
+        },
+        {
+          "id": "b3",
+          "template": "b",
+          "baseline": [
+            90,
+            40,
+            85
+          ],
+          "candidate": [
+            92,
+            94,
+            90
+          ]
+        },
+        {
+          "id": "b4",
+          "template": "b",
+          "baseline": [
+            90,
+            40,
+            85
+          ],
+          "candidate": [
+            92,
+            94,
+            90
+          ]
+        },
+        {
+          "id": "b5",
+          "template": "b",
+          "baseline": [
+            92,
+            42,
+            87
+          ],
+          "candidate": [
+            94,
+            96,
+            92
+          ]
+        },
+        {
+          "id": "b6",
+          "template": "b",
+          "baseline": [
+            94,
+            44,
+            89
+          ],
+          "candidate": [
+            96,
+            98,
+            94
+          ]
+        },
+        {
+          "id": "c1",
+          "template": "c",
+          "baseline": [
+            36,
+            36,
+            81
+          ],
+          "candidate": [
+            88,
+            90,
+            86
+          ]
+        },
+        {
+          "id": "c2",
+          "template": "c",
+          "baseline": [
+            38,
+            38,
+            83
+          ],
+          "candidate": [
+            90,
+            92,
+            88
+          ]
+        },
+        {
+          "id": "c3",
+          "template": "c",
+          "baseline": [
+            40,
+            40,
+            85
+          ],
+          "candidate": [
+            92,
+            94,
+            90
+          ]
+        },
+        {
+          "id": "c4",
+          "template": "c",
+          "baseline": [
+            40,
+            40,
+            85
+          ],
+          "candidate": [
+            92,
+            94,
+            90
+          ]
+        },
+        {
+          "id": "c5",
+          "template": "c",
+          "baseline": [
+            42,
+            42,
+            87
+          ],
+          "candidate": [
+            94,
+            96,
+            92
+          ]
+        },
+        {
+          "id": "c6",
+          "template": "c",
+          "baseline": [
+            44,
+            44,
+            89
+          ],
+          "candidate": [
+            96,
+            98,
+            94
+          ]
+        },
+        {
+          "id": "d1",
+          "template": "d",
+          "baseline": [
+            81,
+            31,
+            81
+          ],
+          "candidate": [
+            84,
+            91,
+            86
+          ]
+        },
+        {
+          "id": "d2",
+          "template": "d",
+          "baseline": [
+            83,
+            33,
+            83
+          ],
+          "candidate": [
+            86,
+            93,
+            88
+          ]
+        },
+        {
+          "id": "d3",
+          "template": "d",
+          "baseline": [
+            85,
+            35,
+            85
+          ],
+          "candidate": [
+            88,
+            95,
+            90
+          ]
+        },
+        {
+          "id": "d4",
+          "template": "d",
+          "baseline": [
+            85,
+            35,
+            85
+          ],
+          "candidate": [
+            88,
+            95,
+            90
+          ]
+        },
+        {
+          "id": "d5",
+          "template": "d",
+          "baseline": [
+            87,
+            37,
+            87
+          ],
+          "candidate": [
+            90,
+            97,
+            92
+          ]
+        },
+        {
+          "id": "d6",
+          "template": "d",
+          "baseline": [
+            89,
+            39,
+            89
+          ],
+          "candidate": [
+            92,
+            99,
+            94
+          ]
+        },
+        {
+          "id": "e1",
+          "template": "e",
+          "baseline": [
+            56,
+            81,
+            31
+          ],
+          "candidate": [
+            88,
+            90,
+            88
+          ]
+        },
+        {
+          "id": "e2",
+          "template": "e",
+          "baseline": [
+            58,
+            83,
+            33
+          ],
+          "candidate": [
+            90,
+            92,
+            90
+          ]
+        },
+        {
+          "id": "e3",
+          "template": "e",
+          "baseline": [
+            60,
+            85,
+            35
+          ],
+          "candidate": [
+            92,
+            94,
+            92
+          ]
+        },
+        {
+          "id": "e4",
+          "template": "e",
+          "baseline": [
+            60,
+            85,
+            35
+          ],
+          "candidate": [
+            92,
+            94,
+            92
+          ]
+        },
+        {
+          "id": "e5",
+          "template": "e",
+          "baseline": [
+            62,
+            87,
+            37
+          ],
+          "candidate": [
+            94,
+            96,
+            94
+          ]
+        },
+        {
+          "id": "e6",
+          "template": "e",
+          "baseline": [
+            64,
+            89,
+            39
+          ],
+          "candidate": [
+            96,
+            98,
+            96
+          ]
+        }
+      ]
+    },
+    "Mixed results": {
+      "caseCount": 30,
+      "Relevance": {
+        "baseline": 72,
+        "candidate": 76,
+        "change": 4,
+        "interval": [
+          3.533333333333333,
+          4.433333333333334
+        ]
+      },
+      "Faithfulness": {
+        "baseline": 49,
+        "candidate": 93.8,
+        "change": 44.8,
+        "interval": [
+          37.96666666666667,
+          51
+        ]
+      },
+      "Tone": {
+        "baseline": 75,
+        "candidate": 56,
+        "change": -19,
+        "interval": [
+          -23,
+          -15
+        ]
+      },
+      "cases": [
+        {
+          "id": "a1",
+          "template": "a",
+          "baseline": [
+            81,
+            41,
+            81
+          ],
+          "candidate": [
+            86,
+            88,
+            56
+          ]
+        },
+        {
+          "id": "a2",
+          "template": "a",
+          "baseline": [
+            83,
+            43,
+            83
+          ],
+          "candidate": [
+            88,
+            90,
+            58
+          ]
+        },
+        {
+          "id": "a3",
+          "template": "a",
+          "baseline": [
+            85,
+            45,
+            85
+          ],
+          "candidate": [
+            90,
+            92,
+            60
+          ]
+        },
+        {
+          "id": "a4",
+          "template": "a",
+          "baseline": [
+            85,
+            45,
+            85
+          ],
+          "candidate": [
+            90,
+            92,
+            60
+          ]
+        },
+        {
+          "id": "a5",
+          "template": "a",
+          "baseline": [
+            87,
+            47,
+            87
+          ],
+          "candidate": [
+            92,
+            94,
+            62
+          ]
+        },
+        {
+          "id": "a6",
+          "template": "a",
+          "baseline": [
+            89,
+            49,
+            89
+          ],
+          "candidate": [
+            94,
+            96,
+            64
+          ]
+        },
+        {
+          "id": "b1",
+          "template": "b",
+          "baseline": [
+            86,
+            36,
+            81
+          ],
+          "candidate": [
+            88,
+            90,
+            56
+          ]
+        },
+        {
+          "id": "b2",
+          "template": "b",
+          "baseline": [
+            88,
+            38,
+            83
+          ],
+          "candidate": [
+            90,
+            92,
+            58
+          ]
+        },
+        {
+          "id": "b3",
+          "template": "b",
+          "baseline": [
+            90,
+            40,
+            85
+          ],
+          "candidate": [
+            92,
+            94,
+            60
+          ]
+        },
+        {
+          "id": "b4",
+          "template": "b",
+          "baseline": [
+            90,
+            40,
+            85
+          ],
+          "candidate": [
+            92,
+            94,
+            60
+          ]
+        },
+        {
+          "id": "b5",
+          "template": "b",
+          "baseline": [
+            92,
+            42,
+            87
+          ],
+          "candidate": [
+            94,
+            96,
+            62
+          ]
+        },
+        {
+          "id": "b6",
+          "template": "b",
+          "baseline": [
+            94,
+            44,
+            89
+          ],
+          "candidate": [
+            96,
+            98,
+            64
+          ]
+        },
+        {
+          "id": "c1",
+          "template": "c",
+          "baseline": [
+            36,
+            36,
+            81
+          ],
+          "candidate": [
+            41,
+            90,
+            56
+          ]
+        },
+        {
+          "id": "c2",
+          "template": "c",
+          "baseline": [
+            38,
+            38,
+            83
+          ],
+          "candidate": [
+            43,
+            92,
+            58
+          ]
+        },
+        {
+          "id": "c3",
+          "template": "c",
+          "baseline": [
+            40,
+            40,
+            85
+          ],
+          "candidate": [
+            45,
+            94,
+            60
+          ]
+        },
+        {
+          "id": "c4",
+          "template": "c",
+          "baseline": [
+            40,
+            40,
+            85
+          ],
+          "candidate": [
+            45,
+            94,
+            60
+          ]
+        },
+        {
+          "id": "c5",
+          "template": "c",
+          "baseline": [
+            42,
+            42,
+            87
+          ],
+          "candidate": [
+            47,
+            96,
+            62
+          ]
+        },
+        {
+          "id": "c6",
+          "template": "c",
+          "baseline": [
+            44,
+            44,
+            89
+          ],
+          "candidate": [
+            49,
+            98,
+            64
+          ]
+        },
+        {
+          "id": "d1",
+          "template": "d",
+          "baseline": [
+            81,
+            31,
+            81
+          ],
+          "candidate": [
+            84,
+            91,
+            56
+          ]
+        },
+        {
+          "id": "d2",
+          "template": "d",
+          "baseline": [
+            83,
+            33,
+            83
+          ],
+          "candidate": [
+            86,
+            93,
+            58
+          ]
+        },
+        {
+          "id": "d3",
+          "template": "d",
+          "baseline": [
+            85,
+            35,
+            85
+          ],
+          "candidate": [
+            88,
+            95,
+            60
+          ]
+        },
+        {
+          "id": "d4",
+          "template": "d",
+          "baseline": [
+            85,
+            35,
+            85
+          ],
+          "candidate": [
+            88,
+            95,
+            60
+          ]
+        },
+        {
+          "id": "d5",
+          "template": "d",
+          "baseline": [
+            87,
+            37,
+            87
+          ],
+          "candidate": [
+            90,
+            97,
+            62
+          ]
+        },
+        {
+          "id": "d6",
+          "template": "d",
+          "baseline": [
+            89,
+            39,
+            89
+          ],
+          "candidate": [
+            92,
+            99,
+            64
+          ]
+        },
+        {
+          "id": "e1",
+          "template": "e",
+          "baseline": [
+            56,
+            81,
+            31
+          ],
+          "candidate": [
+            61,
+            90,
+            36
+          ]
+        },
+        {
+          "id": "e2",
+          "template": "e",
+          "baseline": [
+            58,
+            83,
+            33
+          ],
+          "candidate": [
+            63,
+            92,
+            38
+          ]
+        },
+        {
+          "id": "e3",
+          "template": "e",
+          "baseline": [
+            60,
+            85,
+            35
+          ],
+          "candidate": [
+            65,
+            94,
+            40
+          ]
+        },
+        {
+          "id": "e4",
+          "template": "e",
+          "baseline": [
+            60,
+            85,
+            35
+          ],
+          "candidate": [
+            65,
+            94,
+            40
+          ]
+        },
+        {
+          "id": "e5",
+          "template": "e",
+          "baseline": [
+            62,
+            87,
+            37
+          ],
+          "candidate": [
+            67,
+            96,
+            42
+          ]
+        },
+        {
+          "id": "e6",
+          "template": "e",
+          "baseline": [
+            64,
+            89,
+            39
+          ],
+          "candidate": [
+            69,
+            98,
+            44
+          ]
+        }
+      ]
+    },
+    "Inconclusive": {
+      "caseCount": 8,
+      "Relevance": {
+        "baseline": 73.375,
+        "candidate": 77.25,
+        "change": 3.875,
+        "interval": [
+          2.75,
+          5
+        ]
+      },
+      "Faithfulness": {
+        "baseline": 39.625,
+        "candidate": 39.625,
+        "change": 0,
+        "interval": [
+          -12.5,
+          12.5
+        ]
+      },
+      "Tone": {
+        "baseline": 82.75,
+        "candidate": 57.75,
+        "change": -25,
+        "interval": [
+          -25,
+          -25
+        ]
+      },
+      "cases": [
+        {
+          "id": "a1",
+          "template": "a",
+          "baseline": [
+            81,
+            41,
+            81
+          ],
+          "candidate": [
+            86,
+            66,
+            56
+          ]
+        },
+        {
+          "id": "a2",
+          "template": "a",
+          "baseline": [
+            83,
+            43,
+            83
+          ],
+          "candidate": [
+            88,
+            18,
+            58
+          ]
+        },
+        {
+          "id": "a3",
+          "template": "a",
+          "baseline": [
+            85,
+            45,
+            85
+          ],
+          "candidate": [
+            90,
+            65,
+            60
+          ]
+        },
+        {
+          "id": "b1",
+          "template": "b",
+          "baseline": [
+            86,
+            36,
+            81
+          ],
+          "candidate": [
+            88,
+            16,
+            56
+          ]
+        },
+        {
+          "id": "b2",
+          "template": "b",
+          "baseline": [
+            88,
+            38,
+            83
+          ],
+          "candidate": [
+            90,
+            53,
+            58
+          ]
+        },
+        {
+          "id": "b3",
+          "template": "b",
+          "baseline": [
+            90,
+            40,
+            85
+          ],
+          "candidate": [
+            92,
+            25,
+            60
+          ]
+        },
+        {
+          "id": "c1",
+          "template": "c",
+          "baseline": [
+            36,
+            36,
+            81
+          ],
+          "candidate": [
+            41,
+            46,
+            56
+          ]
+        },
+        {
+          "id": "c2",
+          "template": "c",
+          "baseline": [
+            38,
+            38,
+            83
+          ],
+          "candidate": [
+            43,
+            28,
+            58
+          ]
+        }
+      ]
+    }
+  }
+}
