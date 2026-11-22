@@ -13,7 +13,7 @@ A script in `<head>` can instead set `data-target="#article-anchor"`; the select
 
 ## Would you ship this change?
 
-The generated fixture must load before the applet. Means and seeded paired-bootstrap intervals are precomputed; the browser does not sample them.
+The generated fixture must load before the applet. It contains one fictional jacket query and five fictional agent configurations. Each option shows an overall score, calculated as the rounded arithmetic mean of Relevance, Faithfulness, and Tone. The balanced and pushy configurations both score 75 overall, while their category scores differ sharply. The browser does not call a model or evaluator.
 
 ```html
 <div data-ac-applet="would-you-ship"><p>Interactive synthetic evaluation example loading.</p></div>
@@ -21,7 +21,7 @@ The generated fixture must load before the applet. Means and seeded paired-boots
 <script defer src="https://authorscollective.org/applets/v1/would-you-ship.js"></script>
 ```
 
-Run `node scripts/generate-would-you-ship-fixture.mjs` after changing score inputs or interval methodology; commit JSON and browser JS together. JSON includes synthetic paired scores, means, interval bounds, seed, and sample count.
+Run `node scripts/generate-would-you-ship-fixture.mjs` after changing the query, catalog facts, configurations, answers, scores, or rationales; commit JSON and browser JS together. All values and answers are synthetic teaching examples, not Agent Studio measurements. The total is intentionally a simple average to illustrate how an aggregate can hide a weak category; it is not a production quality score.
 
 ## Preview and verification
 

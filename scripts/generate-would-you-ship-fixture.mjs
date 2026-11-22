@@ -2,35 +2,115 @@ import { writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const templates = [
-  { id: 'a', base: [85,45,85], clear: [90,92,90], mixed: [90,92,60] },
-  { id: 'b', base: [90,40,85], clear: [92,94,90], mixed: [92,94,60] },
-  { id: 'c', base: [40,40,85], clear: [92,94,90], mixed: [45,94,60] },
-  { id: 'd', base: [85,35,85], clear: [88,95,90], mixed: [88,95,60] },
-  { id: 'e', base: [60,85,35], clear: [92,94,92], mixed: [65,94,40] },
-];
-const offsets = [-4,-2,0,0,2,4];
-const metrics = ['Relevance','Faithfulness','Tone'];
-function clamp(n) { return Math.max(0, Math.min(100, n)); }
-function random(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let x = Math.imul(seed ^ seed >>> 15, 1 | seed); x = x + Math.imul(x ^ x >>> 7, 61 | x) ^ x; return ((x ^ x >>> 14) >>> 0) / 4294967296; }; }
-function interval(diffs) { const rnd = random(42), samples = []; for (let i=0;i<10000;i++) { let sum=0; for(let j=0;j<diffs.length;j++) sum += diffs[Math.floor(rnd()*diffs.length)]; samples.push(sum/diffs.length); } samples.sort((a,b)=>a-b); return [samples[250],samples[9749]]; }
-const ids = { 'Clear improvement': null, 'Mixed results': null, 'Inconclusive': ['a1','a2','a3','b1','b2','b3','c1','c2'] };
-const scenarios = {};
-for (const name of Object.keys(ids)) {
-  const rows=[];
-  templates.forEach((t, ti) => offsets.forEach((off, j) => {
-    const id=t.id+(j+1); if(ids[name] && !ids[name].includes(id)) return;
-    const base=t.base.map(v=>clamp(v+off));
-    let cand=(name==='Clear improvement'?t.clear:t.mixed).map(v=>clamp(v+off));
-    if(name==='Inconclusive') { const delta=[25,-25,20,-20,15,-15,10,-10][ids[name].indexOf(id)]; cand[1]=clamp(base[1]+delta); }
-    rows.push({id, template:t.id, baseline:base, candidate:cand});
-  }));
-  const stats={caseCount:rows.length};
-  metrics.forEach((m,k)=>{ const b=rows.map(r=>r.baseline[k]), c=rows.map(r=>r.candidate[k]), diffs=rows.map(r=>r.candidate[k]-r.baseline[k]); stats[m]={baseline:b.reduce((a,x)=>a+x,0)/b.length,candidate:c.reduce((a,x)=>a+x,0)/c.length,change:diffs.reduce((a,x)=>a+x,0)/diffs.length,interval:interval(diffs)}; });
-  scenarios[name]={...stats,cases:rows};
+// One fictional jacket query, answered by five fictional agent configurations.
+// Scores are teaching examples, not measured Agent Studio results.
+const fixture = {
+  query: 'I need a waterproof jacket under 400g. Which one should I buy?',
+  productFacts: [
+    'Trail Shell: 240g, water-resistant; no published waterproof rating.',
+    'Storm Shell: 310g, waterproof to 10,000mm, with taped seams.',
+    'Alpine Parka: 950g, insulated and water-resistant; not waterproof-rated.',
+  ],
+  metrics: ['Relevance', 'Faithfulness', 'Tone'],
+  configurations: [
+    {
+      id: 'baseline',
+      name: 'General-purpose prompt',
+      summary: 'Answers confidently without checking every product claim.',
+      settings: [
+        'Prompt: Be helpful and recommend a product.',
+        'Product context: Catalog results are available, but no instruction requires checking each claim against them.',
+        'Style: Friendly and concise.',
+      ],
+      answer: 'Trail Shell is a great choice. It weighs 240g and is fully waterproof, so it is the lightest option for wet weather.',
+      scores: { Relevance: 74, Faithfulness: 38, Tone: 76 },
+      reasons: {
+        Relevance: 'It recommends a jacket under 400g, but misses the waterproof requirement.',
+        Faithfulness: 'It calls Trail Shell waterproof even though the catalog says only water-resistant.',
+        Tone: 'The wording is clear and neutral.',
+      },
+    },
+    {
+      id: 'balanced',
+      name: 'Balanced improvement',
+      summary: 'A modest answer across all three categories.',
+      settings: [
+        'Prompt: Answer the shopper’s question directly.',
+        'Product context: Use the catalog facts.',
+        'Style: Keep the answer neutral.',
+      ],
+      answer: 'Storm Shell is waterproof and weighs 310g, so it fits your requirements.',
+      scores: { Relevance: 75, Faithfulness: 75, Tone: 75 },
+      reasons: {
+        Relevance: 'It picks the jacket that meets both stated requirements.',
+        Faithfulness: 'The weight and waterproof claim match the catalog.',
+        Tone: 'The answer is neutral, if a little plain.',
+      },
+    },
+    {
+      id: 'pushy',
+      name: 'Accurate, but pushy',
+      summary: 'The same total as the balanced setup, with a major weakness hidden inside it.',
+      settings: [
+        'Prompt: Match the shopper’s requirements and use catalog facts.',
+        'Product context: Retrieve matching jacket records.',
+        'Style: Add persuasive urgency and encourage an immediate purchase.',
+      ],
+      answer: 'Storm Shell is waterproof and weighs 310g, so it fits your requirements. Buy now before it sells out!',
+      scores: { Relevance: 98, Faithfulness: 98, Tone: 29 },
+      reasons: {
+        Relevance: 'It directly recommends the jacket that matches the request.',
+        Faithfulness: 'The product details match the catalog.',
+        Tone: 'The unsupported pressure to buy makes the answer feel pushy.',
+      },
+    },
+    {
+      id: 'cautious',
+      name: 'Overly cautious',
+      summary: 'Avoids a false claim, but refuses when the catalog has a good match.',
+      settings: [
+        'Prompt: Never make a claim unless it is supported by a retrieved fact.',
+        'Product context: Use the catalog records.',
+        'Style: Prefer refusing when any detail is uncertain.',
+      ],
+      answer: 'I can’t recommend one. The catalog does not provide enough information to confirm a suitable waterproof jacket.',
+      scores: { Relevance: 42, Faithfulness: 91, Tone: 78 },
+      reasons: {
+        Relevance: 'It does not recommend Storm Shell, which meets the weight and waterproof requirements.',
+        Faithfulness: 'It avoids inventing details, but overlooks facts that are present.',
+        Tone: 'The refusal is polite and easy to understand.',
+      },
+    },
+    {
+      id: 'grounded',
+      name: 'Grounded and helpful',
+      summary: 'Uses the product facts and explains why the match fits.',
+      settings: [
+        'Prompt: Check every product claim against the catalog and answer all stated requirements.',
+        'Product context: Retrieve the jacket records with weight and waterproof details.',
+        'Style: Be concise, neutral, and avoid unsupported urgency.',
+      ],
+      answer: 'Storm Shell fits: it weighs 310g and is waterproof to 10,000mm, with taped seams. Trail Shell is lighter, but its record says water-resistant, not waterproof.',
+      scores: { Relevance: 94, Faithfulness: 96, Tone: 93 },
+      reasons: {
+        Relevance: 'It answers the request and explains why the lighter jacket is not a match.',
+        Faithfulness: 'Each product detail is supported by the catalog.',
+        Tone: 'It is helpful without adding pressure or hype.',
+      },
+    },
+  ],
+};
+
+for (const configuration of fixture.configurations) {
+  const values = Object.values(configuration.scores);
+  configuration.overall = Math.round(values.reduce((sum, value) => sum + value, 0) / values.length);
 }
-const repoRoot=resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const dir=resolve(repoRoot,'public/applets/v1');
-await writeFile(resolve(dir,'would-you-ship-fixture.json'),JSON.stringify({synthetic:true,seed:42,resamples:10000,scenarios},null,2)+'\n');
-await writeFile(resolve(dir,'would-you-ship-fixture.js'),'/* Generated by scripts/generate-would-you-ship-fixture.mjs. Synthetic offline fixture. */\nwindow.AC_WYS_FIXTURE='+JSON.stringify(scenarios)+';\n');
+
+const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const dir = resolve(repoRoot, 'public/applets/v1');
+await writeFile(resolve(dir, 'would-you-ship-fixture.json'), `${JSON.stringify({ synthetic: true, fixture }, null, 2)}\n`);
+await writeFile(
+  resolve(dir, 'would-you-ship-fixture.js'),
+  `/* Generated by scripts/generate-would-you-ship-fixture.mjs. Synthetic offline fixture. */\nwindow.AC_WYS_FIXTURE=${JSON.stringify(fixture)};\n`,
+);
 console.log('Wrote synthetic fixture JSON and browser data.');
