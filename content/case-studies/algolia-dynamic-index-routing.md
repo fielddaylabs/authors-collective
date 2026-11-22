@@ -13,7 +13,7 @@ ctas:
   - label: Open the demo
     href: https://dynamic-index-routing-agent-studio.authorscollective.org/
   - label: Read the build notes
-    href: https://www.fieldday.dev/work/algolia-dynamic-index-routing/
+    href: https://fieldday.dev/work/algolia-dynamic-index-routing/
 facts:
   - label: Client
     value: Algolia
@@ -34,7 +34,7 @@ roles:
     description: Article framing, examples, and reader-facing explanation for Algolia’s technical audience.
   - label: Development partner
     name: Field Day Labs
-    href: https://www.fieldday.dev/work/algolia-dynamic-index-routing/
+    href: https://fieldday.dev/work/algolia-dynamic-index-routing/
     description: Working demo, visible routing evidence, and server-owned provider boundary.
 ---
 
@@ -65,4 +65,4 @@ The hosted demo and any CMS-native embed should be validated against the current
 
 ## Keep exploring
 
-Read the [Field Day Labs build notes](https://www.fieldday.dev/work/algolia-dynamic-index-routing/) or [open the interactive demo](https://dynamic-index-routing-agent-studio.authorscollective.org/) to see the routing decision in context.
+Read the [Field Day Labs build notes](https://fieldday.dev/work/algolia-dynamic-index-routing/) or [open the interactive demo](https://dynamic-index-routing-agent-studio.authorscollective.org/) to see the routing decision in context.

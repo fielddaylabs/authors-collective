@@ -11,7 +11,7 @@ ctas:
   - label: Try the evaluation widget
     href: https://authorscollective.org/applets/v1/would-you-ship-preview.html
   - label: Read the Field Day Labs case study
-    href: https://www.fieldday.dev/work/algolia-agent-evaluation-widget/
+    href: https://fieldday.dev/work/algolia-agent-evaluation-widget/
 facts:
   - label: Client
     value: Algolia
@@ -32,7 +32,7 @@ roles:
     description: The article framing and reader-focused explanation of how to evaluate agent changes.
   - label: Development partner
     name: Field Day Labs
-    href: https://www.fieldday.dev/work/algolia-agent-evaluation-widget/
+    href: https://fieldday.dev/work/algolia-agent-evaluation-widget/
     description: The interactive widget, its fixed example data, and its article-ready embed.
 ---
 
@@ -62,4 +62,4 @@ The catalog, configurations, answers, prices, and scores are fictional teaching 
 
 ## Keep exploring
 
-[Try the evaluation widget](https://authorscollective.org/applets/v1/would-you-ship-preview.html) or read the [Field Day Labs case study](https://www.fieldday.dev/work/algolia-agent-evaluation-widget/) for the implementation details.
+[Try the evaluation widget](https://authorscollective.org/applets/v1/would-you-ship-preview.html) or read the [Field Day Labs case study](https://fieldday.dev/work/algolia-agent-evaluation-widget/) for the implementation details.

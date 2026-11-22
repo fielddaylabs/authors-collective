@@ -15,7 +15,7 @@ ctas:
   - label: Open the demo
     href: https://specialized-agent-handoff.authorscollective.org/
   - label: Visit Field Day Labs
-    href: https://www.fieldday.dev/work/algolia-agent-handoff/
+    href: https://fieldday.dev/work/algolia-agent-handoff/
 facts:
   - label: Client
     value: Algolia
@@ -36,7 +36,7 @@ roles:
     description: Article, example, and reader-facing explanation for Algolia’s technical audience.
   - label: Development partner
     name: Field Day Labs
-    href: https://www.fieldday.dev/work/algolia-agent-handoff/
+    href: https://fieldday.dev/work/algolia-agent-handoff/
     description: Browser embed, static fallback, and server-side provider boundary.
 ---
 
@@ -59,4 +59,4 @@ This is an explanatory demo, not a claim that every agent platform provides nati
 
 ## Keep exploring
 
-Read the [Field Day Labs build notes](https://www.fieldday.dev/work/algolia-agent-handoff/) or [open the live example](https://specialized-agent-handoff.authorscollective.org/) to see the boundary in context.
+Read the [Field Day Labs build notes](https://fieldday.dev/work/algolia-agent-handoff/) or [open the live example](https://specialized-agent-handoff.authorscollective.org/) to see the boundary in context.

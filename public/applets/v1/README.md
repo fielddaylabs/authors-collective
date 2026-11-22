@@ -25,7 +25,7 @@ The generated fixture must load before the applet. It contains one fictional jac
         Authors Collective
       </a>
       — development by
-      <a href="https://www.fieldday.dev/work/algolia-dynamic-index-routing/">
+      <a href="https://fieldday.dev/work/algolia-dynamic-index-routing/">
         Field Day Labs
       </a>
     </small>

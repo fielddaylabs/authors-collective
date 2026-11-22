@@ -47,7 +47,7 @@ The site publishes a native, dependency-free embed at `https://authorscollective
     </a>
     <span class="ach-fallback-credit">
       Interactive demo by <a href="https://authorscollective.org/work/algolia-agent-handoff/">Authors Collective</a>
-      · development by <a href="https://www.fieldday.dev/work/algolia-agent-handoff/">Field Day Labs</a>
+      · development by <a href="https://fieldday.dev/work/algolia-agent-handoff/">Field Day Labs</a>
     </span>
   </div>
 </div>
